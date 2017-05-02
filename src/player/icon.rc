@@ -1,0 +1,8 @@
+IDI_ICON1 ICON "music_logo.png"
+IDI_ICON2 ICON "order.png"
+IDI_ICON3 ICON "previous.png"
+IDI_ICON4 ICON "pause.png"
+IDI_ICON5 ICON "next.png"
+IDI_ICON6 ICON "random.png"
+
+
