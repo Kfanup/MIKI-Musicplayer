@@ -13,11 +13,13 @@ public:
     explicit NowPlayingWidget(QWidget *parent = 0);
 
 signals:
+    void nowPlayingClicked();
+    void playingListClicked();
 
 private:
-    QString songName="Take Me To Your Heart";
-    QString singer="Jay";
-    QString more="more";
+    QString songName = "Take Me To Your Heart";
+    QString singer = "Jay";
+    QString more = "more";
     QLabel *nameLable;
     QLabel *singerLable;
     QLabel *detailsLable;

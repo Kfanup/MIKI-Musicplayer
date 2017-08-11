@@ -2,7 +2,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-MusicSliderWidget::MusicSliderWidget(QWidget* parent)
+MusicSliderWidget::MusicSliderWidget(QWidget *parent)
     : QWidget(parent)
 {
     setStyleSheet("color:white");
@@ -12,29 +12,20 @@ MusicSliderWidget::MusicSliderWidget(QWidget* parent)
     musicSlider->setValue(0);
     musicSlider->setFixedSize(400, 12);
 
-    QLabel *nowTimeLabel=new QLabel(tr("00:00"));
-    nowTimeLabel->setMaximumSize(40,12);
-    QLabel *allTimeLabel=new QLabel(tr("00:00"));
-    allTimeLabel->setMaximumSize(40,12);
+    QLabel *nowTimeLabel = new QLabel(tr("00:00"));
+    nowTimeLabel->setMaximumSize(40, 12);
+    QLabel *allTimeLabel = new QLabel(tr("00:00"));
+    allTimeLabel->setMaximumSize(40, 12);
 
-    QHBoxLayout* mhlayout = new QHBoxLayout;
-    mhlayout->setAlignment(Qt::AlignCenter);
-    mhlayout->addStretch(2);
-    mhlayout->addWidget(nowTimeLabel);
-    mhlayout->addStretch(5);
-    mhlayout->addWidget(allTimeLabel);
-    mhlayout->addStretch(2);
-
-    QHBoxLayout *musiclayout=new QHBoxLayout;
+    QHBoxLayout *musiclayout = new QHBoxLayout;
     musiclayout->setAlignment(Qt::AlignCenter);
+    musiclayout->addStretch(10);
+    musiclayout->addWidget(nowTimeLabel);
+    musiclayout->addStretch(1);
     musiclayout->addWidget(musicSlider);
+    musiclayout->addStretch(1);
+    musiclayout->addWidget(allTimeLabel);
+    musiclayout->addStretch(10);
 
-    QVBoxLayout* mvlayout = new QVBoxLayout;
-    mvlayout->setAlignment(Qt::AlignCenter);
-    mvlayout->addLayout(musiclayout);
-    mvlayout->setMargin(0);
-    mvlayout->addSpacing(0);
-    mvlayout->addLayout(mhlayout);
-
-    setLayout(mvlayout);
+    setLayout(musiclayout);
 }

@@ -9,7 +9,7 @@
 #include <qt_windows.h>
 #endif
 
-TitleBar::TitleBar(QWidget* parent)
+TitleBar::TitleBar(QWidget *parent)
     : QWidget(parent)
 {
     setFixedHeight(27);
@@ -21,13 +21,15 @@ TitleBar::TitleBar(QWidget* parent)
     pMinimumBtn = new QPushButton;
     pCloseBtn = new QPushButton;
 
-    pIconLabel->setFixedSize(20, 20);
+    pIconLabel->setFixedSize(28, 28);
     pIconLabel->setScaledContents(true);
 
     QPixmap pixmap(":/new/prefix1/res/music_logo.png");
     pIconLabel->setPixmap(pixmap);
 
     pTitleLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    pTitleLabel->setText("MIKI MUSIC PLAYER");
+    pTitleLabel->setStyleSheet("font-size: 16px;font-weight:500;");
 
     pMaximumBtn->setFixedSize(27, 22);
     pMinimumBtn->setFixedSize(27, 22);
@@ -38,13 +40,13 @@ TitleBar::TitleBar(QWidget* parent)
     pMinimumBtn->setObjectName("minimumsizeBtn");
     pCloseBtn->setObjectName("closeBtn");
 
-    pMaximumBtn->setToolTip("Maximumsize Button");
-    pMinimumBtn->setToolTip("Minimumsize Button");
-    pCloseBtn->setToolTip("Close Button");
+    pMaximumBtn->setToolTip("最小化");
+    pMinimumBtn->setToolTip("最大化");
+    pCloseBtn->setToolTip("关闭");
 
-    QHBoxLayout* playout = new QHBoxLayout;
+    QHBoxLayout *playout = new QHBoxLayout;
     playout->addWidget(pIconLabel);
-    playout->addSpacing(50);
+    playout->addSpacing(10);
     playout->addWidget(pTitleLabel);
     playout->addWidget(pMinimumBtn);
     playout->addWidget(pMaximumBtn);
@@ -59,66 +61,81 @@ TitleBar::TitleBar(QWidget* parent)
     connect(pCloseBtn, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
 }
 
-void TitleBar::mouseDoubleClickEvent(QMouseEvent* event)
+void TitleBar::mouseDoubleClickEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
 
     emit pMaximumBtn->clicked();
 }
 
-/**
-
-
-void TitleBar::mousePressEvent(QMouseEvent* event)
+void TitleBar::mousePressEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
 #ifdef Q_OS_WIN
-    if (ReleaseCapture()) {
-        QWidget* pWindow = this->window();
-        if (pWindow->isTopLevel()) {
-            SendMessage(HWND(pWindow->winId()), WM_SYSCOMMAND, SC_MOVE + HTCAPTION, 0);
-        }
-    }
-    event->ignore();
+//    if (ReleaseCapture()) {
+//        QWidget *pWindow = this->window();
+//        if (pWindow->isTopLevel()) {
+//            SendMessage(HWND(pWindow->winId()), WM_SYSCOMMAND, SC_MOVE + HTCAPTION, 0);
+//        }
+//    }
+//    event->ignore();
 #else
+    mMoveing = true;
+    mPoint = event->globalPos() - pos();
+    return QWidget::mousePressEvent(event);
 #endif
 }
 
-**/
+void TitleBar::mouseMoveEvent(QMouseEvent *event)
+{
+    if (mMoveing && (event->buttons() && Qt::LeftButton)
+        && ((event->globalPos() - mPoint).manhattanLength() > QApplication::startDragDistance())) {
+        move(event->globalPos() - mPoint);
+        mPoint = event->globalPos() - pos();
+    }
+    return QWidget::mouseMoveEvent(event);
+}
 
-bool TitleBar::eventFilter(QObject* obj, QEvent* event)
+void TitleBar::mouseReleaseEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event);
+    mMoveing = false;
+}
+
+bool TitleBar::eventFilter(QObject *obj, QEvent *event)
 {
     switch (event->type()) {
     case QEvent::WindowTitleChange: {
-        QWidget* pwidget = qobject_cast<QWidget*>(obj);
+        QWidget *pwidget = qobject_cast<QWidget *>(obj);
         if (pwidget) {
             pTitleLabel->setText(pwidget->windowTitle());
             return true;
         }
-    }
-        break;
+    } break;
     case QEvent::WindowIconChange: {
-        QWidget* pwidget = qobject_cast<QWidget*>(obj);
+        QWidget *pwidget = qobject_cast<QWidget *>(obj);
         if (pwidget) {
             QIcon icon = pwidget->windowIcon();
             pIconLabel->setPixmap(icon.pixmap(pIconLabel->size()));
             return true;
         }
-    }
+    } break;
+    case QEvent::WindowStateChange:
         break;
-    case QEvent::WindowStateChange:break;
     case QEvent::Resize:
         updateMaximumsize();
         return true;
         break;
-    default:break;
+    default:
+        break;
     }
     return QWidget::eventFilter(obj, event);
 }
 
 void TitleBar::onClicked()
 {
-    QPushButton* pButton = qobject_cast<QPushButton*>(sender());
-    QWidget* pWindow = this->window();
+    QPushButton *pButton = qobject_cast<QPushButton *>(sender());
+    QWidget *pWindow = this->window();
     if (pWindow->isTopLevel()) {
         if (pButton == pMinimumBtn) {
             pWindow->showMinimized();
@@ -132,7 +149,7 @@ void TitleBar::onClicked()
 
 void TitleBar::updateMaximumsize()
 {
-    QWidget* window = this->window();
+    QWidget *window = this->window();
     if (window->isTopLevel()) {
         bool bMaximumsize = window->isMaximized();
         if (bMaximumsize) {

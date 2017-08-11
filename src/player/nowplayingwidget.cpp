@@ -11,10 +11,10 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
     songName = strHeightText.arg(300).arg(songName);
     nowPlayingLabel = new QLabel(tr("正在播放"));
     nowPlayingLabel->setAlignment(Qt::AlignLeft);
-    nowPlayingLabel->setStyleSheet("font-size: 20px");
+    nowPlayingLabel->setStyleSheet("font-size: 16px");
     playListLabel = new QLabel(tr("播放列表"));
     playListLabel->setAlignment(Qt::AlignLeft);
-    playListLabel->setStyleSheet("font-size: 20px");
+    playListLabel->setStyleSheet("font-size: 16px");
 
     QFont mfont1("Microsoft YaHei", 18, 75);
     QFont mfont2("Microsoft YaHei", 14, 50);
@@ -54,12 +54,14 @@ bool NowPlayingWidget::eventFilter(QObject *obj, QEvent *ev)
 {
     if (obj == nowPlayingLabel)
         if (ev->type() == QEvent::MouseButtonPress) {
+            emit nowPlayingClicked();
             return true;
         } else {
             return false;
         }
     else if (obj == playListLabel)
         if (ev->type() == QEvent::MouseButtonPress) {
+            emit playingListClicked();
             return true;
         } else {
             return false;
