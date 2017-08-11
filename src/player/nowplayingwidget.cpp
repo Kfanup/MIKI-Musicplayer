@@ -1,7 +1,7 @@
 #include "nowplayingwidget.h"
 #include <QEvent>
 
-NowPlayingWidget::NowPlayingWidget(QWidget* parent)
+NowPlayingWidget::NowPlayingWidget(QWidget *parent)
     : QWidget(parent)
 {
     setFixedSize(300, 180);
@@ -9,10 +9,10 @@ NowPlayingWidget::NowPlayingWidget(QWidget* parent)
 
     QString strHeightText = "<p style=\"line-height:%1%\">%2<p>";
     songName = strHeightText.arg(300).arg(songName);
-    nowPlayingLabel = new QLabel("Now Playing");
+    nowPlayingLabel = new QLabel(tr("正在播放"));
     nowPlayingLabel->setAlignment(Qt::AlignLeft);
     nowPlayingLabel->setStyleSheet("font-size: 20px");
-    playListLabel = new QLabel("Play List");
+    playListLabel = new QLabel(tr("播放列表"));
     playListLabel->setAlignment(Qt::AlignLeft);
     playListLabel->setStyleSheet("font-size: 20px");
 
@@ -50,7 +50,7 @@ NowPlayingWidget::NowPlayingWidget(QWidget* parent)
     playListLabel->installEventFilter(this);
 }
 
-bool NowPlayingWidget::eventFilter(QObject* obj, QEvent* ev)
+bool NowPlayingWidget::eventFilter(QObject *obj, QEvent *ev)
 {
     if (obj == nowPlayingLabel)
         if (ev->type() == QEvent::MouseButtonPress) {

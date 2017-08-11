@@ -6,5 +6,11 @@
         <file>res/pause.png</file>
         <file>res/previous.png</file>
         <file>res/random.png</file>
+        <file>res/music_logo.ico</file>
+        <file>res/next.ico</file>
+        <file>res/order.ico</file>
+        <file>res/pause.ico</file>
+        <file>res/previous.ico</file>
+        <file>res/random.ico</file>
     </qresource>
 </RCC>

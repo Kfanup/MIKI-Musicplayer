@@ -1,7 +1,0 @@
-#include "playlistwidget.h"
-
-PlayListWidget::PlayListWidget(QWidget *parent) : QWidget(parent)
-{
-    setFixedSize(300, 180);
-    setStyleSheet("color:white");
-}

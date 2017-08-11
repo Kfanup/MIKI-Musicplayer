@@ -1,29 +1,39 @@
 #include "musictoolbar.h"
 #include <QHBoxLayout>
+#include <QtGlobal>
 
-MusicToolBar::MusicToolBar(QWidget* parent)
+MusicToolBar::MusicToolBar(QWidget *parent)
     : QWidget(parent)
 {
     setStyleSheet("color:white");
     orderBtn = new QToolButton;
-    orderBtn->setIcon(QIcon(":/new/prefix1/res/order.png"));
     randomBtn = new QToolButton;
-    randomBtn->setIcon(QIcon(":/new/prefix1/res/random.png"));
     previousBtn = new QToolButton;
-    previousBtn->setIcon(QIcon(":/new/prefix1/res/previous.png"));
     pauseBtn = new QToolButton;
-    pauseBtn->setIcon(QIcon(":/new/prefix1/res/pause.png"));
-    pauseBtn->setFixedSize(40,40);
+    pauseBtn->setFixedSize(40, 40);
     nextBtn = new QToolButton;
-    nextBtn->setIcon(QIcon(":/new/prefix1/res/next.png"));
 
-    QSlider* volumeSlider = new QSlider(Qt::Horizontal);
-    volumeSlider->setFixedSize(100,12);
+#ifdef Q_OS_WIN
+    pauseBtn->setIcon(QIcon(":/new/prefix1/res/music_logo.ico"));
+    previousBtn->setIcon(QIcon(":/new/prefix1/res/previous.ico"));
+    randomBtn->setIcon(QIcon(":/new/prefix1/res/random.ico"));
+    orderBtn->setIcon(QIcon(":/new/prefix1/res/order.ico"));
+    nextBtn->setIcon(QIcon(":/new/prefix1/res/next.ico"));
+#else
+    pauseBtn->setIcon(QIcon(":/new/prefix1/res/pause.png"));
+    previousBtn->setIcon(QIcon(":/new/prefix1/res/previous.png"));
+    randomBtn->setIcon(QIcon(":/new/prefix1/res/random.png"));
+    orderBtn->setIcon(QIcon(":/new/prefix1/res/order.png"));
+    nextBtn->setIcon(QIcon(":/new/prefix1/res/next.png"));
+#endif
+
+    QSlider *volumeSlider = new QSlider(Qt::Horizontal);
+    volumeSlider->setFixedSize(100, 12);
     volumeSlider->setMaximum(100);
     volumeSlider->setMinimum(0);
     volumeSlider->setValue(30);
 
-    QHBoxLayout *mainlayout=new QHBoxLayout;
+    QHBoxLayout *mainlayout = new QHBoxLayout;
     mainlayout->setAlignment(Qt::AlignCenter);
     mainlayout->addWidget(orderBtn);
     mainlayout->setSpacing(15);
@@ -64,4 +74,3 @@ void MusicToolBar::onNextBtnClicked()
 {
     emit nextBtnClicked();
 }
-

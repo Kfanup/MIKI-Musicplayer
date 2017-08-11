@@ -5,4 +5,9 @@ IDI_ICON4 ICON "pause.png"
 IDI_ICON5 ICON "next.png"
 IDI_ICON6 ICON "random.png"
 
-
+IDI_ICON7 ICON "music_logo.ico"
+IDI_ICON8 ICON "order.ico"
+IDI_ICON9 ICON "previous.ico"
+IDI_ICON10 ICON "pause.ico"
+IDI_ICON11 ICON "next.ico"
+IDI_ICON12 ICON "random.ico"
