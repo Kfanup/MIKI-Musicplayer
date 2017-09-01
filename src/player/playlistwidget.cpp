@@ -1,11 +1,12 @@
 #include "playlistwidget.h"
 #include <QEvent>
 
-PlayListWidget::PlayListWidget(QWidget *parent)
+PlayListWidget::PlayListWidget(QFileInfoList songList, QWidget *parent)
     : QWidget(parent)
 {
+    songCount = songList.count();
     setFixedSize(300, 180);
-    setStyleSheet("color:white");
+    setStyleSheet("color:black");
 
     nowPlayingLabel = new QLabel(tr("正在播放"));
     nowPlayingLabel->setAlignment(Qt::AlignLeft);
@@ -14,9 +15,12 @@ PlayListWidget::PlayListWidget(QWidget *parent)
     playListLabel->setAlignment(Qt::AlignLeft);
     playListLabel->setStyleSheet("font-size: 16px");
 
+    playListWidget = new QTableWidget(songCount, 2, this);
+
     playout = new QVBoxLayout;
     playout->addWidget(nowPlayingLabel);
     playout->addWidget(playListLabel);
+    playout->addWidget(playListWidget);
     playout->addStretch(1);
 
     setLayout(playout);

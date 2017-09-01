@@ -6,24 +6,29 @@ MusicToolBar::MusicToolBar(QWidget *parent)
     : QWidget(parent)
 {
     setStyleSheet("color:white");
-    orderBtn = new QToolButton;
-    randomBtn = new QToolButton;
+    toolBar = new QToolBar;
+    playModeBtn = new QToolButton;
     previousBtn = new QToolButton;
     pauseBtn = new QToolButton;
     pauseBtn->setFixedSize(40, 40);
     nextBtn = new QToolButton;
 
+    addSong = new QAction("添加音乐", this);
+    addSongDir = new QAction("添加音乐文件", this);
+    toolBar->addAction(addSong);
+    toolBar->addAction(addSongDir);
+
 #ifdef Q_OS_WIN
     pauseBtn->setIcon(QIcon(":/new/prefix1/res/music_logo.ico"));
     previousBtn->setIcon(QIcon(":/new/prefix1/res/previous.ico"));
-    randomBtn->setIcon(QIcon(":/new/prefix1/res/random.ico"));
-    orderBtn->setIcon(QIcon(":/new/prefix1/res/order.ico"));
+    playModeBtn->setIcon(QIcon(":/new/prefix1/res/random.ico"));
+    //    toolBar->setIcon(QIcon(":/new/prefix1/res/setting.ico"));
     nextBtn->setIcon(QIcon(":/new/prefix1/res/next.ico"));
 #else
     pauseBtn->setIcon(QIcon(":/new/prefix1/res/pause.png"));
     previousBtn->setIcon(QIcon(":/new/prefix1/res/previous.png"));
-    randomBtn->setIcon(QIcon(":/new/prefix1/res/random.png"));
-    orderBtn->setIcon(QIcon(":/new/prefix1/res/order.png"));
+    playModeBtn->setIcon(QIcon(":/new/prefix1/res/order.png"));
+    //    toolBar->setIcon(QIcon(":/new/prefix1/res/setting.png"));
     nextBtn->setIcon(QIcon(":/new/prefix1/res/next.png"));
 #endif
 
@@ -35,9 +40,9 @@ MusicToolBar::MusicToolBar(QWidget *parent)
 
     QHBoxLayout *mainlayout = new QHBoxLayout;
     mainlayout->setAlignment(Qt::AlignCenter);
-    mainlayout->addWidget(orderBtn);
+    mainlayout->addWidget(toolBar);
     mainlayout->setSpacing(15);
-    mainlayout->addWidget(randomBtn);
+    mainlayout->addWidget(playModeBtn);
     mainlayout->setSpacing(15);
     mainlayout->addWidget(previousBtn);
     mainlayout->setSpacing(20);
@@ -50,27 +55,32 @@ MusicToolBar::MusicToolBar(QWidget *parent)
     setLayout(mainlayout);
 }
 
-void MusicToolBar::onOrderBtnClicked()
+// inline void MusicToolBar::onAddSongClicked()
+//{
+//    emit addSongClicked();
+//}
+
+// inline void MusicToolBar::onAddSongDirClicked()
+//{
+//    emit addSongDirClicked();
+//}
+
+inline void MusicToolBar::onPlayModeBtnClicked()
 {
-    emit orderBtnClicked();
+    emit playModeBtnClicked();
 }
 
-void MusicToolBar::onRandomBtnClicked()
-{
-    emit randoBtnClicked();
-}
-
-void MusicToolBar::onPreviousBtnClicked()
+inline void MusicToolBar::onPreviousBtnClicked()
 {
     emit previousBtnClicked();
 }
 
-void MusicToolBar::onPauseBtnClicked()
+inline void MusicToolBar::onPauseBtnClicked()
 {
     emit pauseBtnClicked();
 }
 
-void MusicToolBar::onNextBtnClicked()
+inline void MusicToolBar::onNextBtnClicked()
 {
     emit nextBtnClicked();
 }

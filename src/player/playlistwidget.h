@@ -3,23 +3,29 @@
 
 #include <QWidget>
 #include <QLabel>
+#include <QList>
+#include <QFileInfoList>
+#include <QTableWidget>
+#include <QMediaContent>
+#include <QMediaResource>
 #include <QVBoxLayout>
 
 class PlayListWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PlayListWidget(QWidget *parent = 0);
+    explicit PlayListWidget(QFileInfoList songList, QWidget *parent = 0);
 
 signals:
     void nowPlayingClicked();
     void playingListClicked();
 
-public slots:
-
 private:
+    qint32 songCount;
+    QList<QMediaContent *> songList;
     QLabel *nowPlayingLabel;
     QLabel *playListLabel;
+    QTableWidget *playListWidget;
     QVBoxLayout *playout;
 
 protected:

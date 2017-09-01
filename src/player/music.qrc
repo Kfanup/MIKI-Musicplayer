@@ -12,5 +12,21 @@
         <file>res/pause.ico</file>
         <file>res/previous.ico</file>
         <file>res/random.ico</file>
+        <file>res/close.ico</file>
+        <file>res/close.png</file>
+        <file>res/itemloop.ico</file>
+        <file>res/itemloop.png</file>
+        <file>res/itemonce.ico</file>
+        <file>res/itemonce.png</file>
+        <file>res/loop.ico</file>
+        <file>res/loop.png</file>
+        <file>res/maximize.ico</file>
+        <file>res/maximize.png</file>
+        <file>res/min.ico</file>
+        <file>res/min.png</file>
+        <file>res/setting.ico</file>
+        <file>res/setting.png</file>
+        <file>res/play.png</file>
+        <file>res/play.ico</file>
     </qresource>
 </RCC>

@@ -4,6 +4,8 @@
 #
 #-------------------------------------------------
 
+include($$PWD/../config/config.pri)
+
 QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -29,14 +31,16 @@ SOURCES += main.cpp\
     musicsliderwidget.cpp \
     musictoolbar.cpp \
     titlebar.cpp \
-    playlistwidget.cpp
+    playlistwidget.cpp \
+    ../backend/util/musicfilemanager.cpp
 
 HEADERS  += mplayer.h \
     nowplayingwidget.h \
     musicsliderwidget.h \
     musictoolbar.h \
     titlebar.h \
-    playlistwidget.h
+    playlistwidget.h \
+    ../backend/util/musicfilemanager.h
 
 DISTFILES +=
 

@@ -13,7 +13,7 @@ TitleBar::TitleBar(QWidget *parent)
     : QWidget(parent)
 {
     setFixedHeight(27);
-    setStyleSheet("color:white");
+    setStyleSheet("color:black");
 
     pIconLabel = new QLabel;
     pTitleLabel = new QLabel;
@@ -29,7 +29,7 @@ TitleBar::TitleBar(QWidget *parent)
 
     pTitleLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     pTitleLabel->setText("MIKI MUSIC PLAYER");
-    pTitleLabel->setStyleSheet("font-size: 16px;font-weight:500;");
+    pTitleLabel->setStyleSheet("font-size: 16px;font-weight:500;color:black;");
 
     pMaximumBtn->setFixedSize(27, 22);
     pMinimumBtn->setFixedSize(27, 22);
@@ -44,6 +44,10 @@ TitleBar::TitleBar(QWidget *parent)
     pMinimumBtn->setToolTip("最大化");
     pCloseBtn->setToolTip("关闭");
 
+    pMaximumBtn->setIcon(QIcon(":/new/prefix1/res/maximize.png"));
+    pMinimumBtn->setIcon(QIcon(":/new/prefix1/res/min.png"));
+    pCloseBtn->setIcon(QIcon(":/new/prefix1/res/close.png"));
+
     QHBoxLayout *playout = new QHBoxLayout;
     playout->addWidget(pIconLabel);
     playout->addSpacing(10);
@@ -56,9 +60,9 @@ TitleBar::TitleBar(QWidget *parent)
 
     setLayout(playout);
 
-    connect(pMaximumBtn, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
-    connect(pMinimumBtn, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
-    connect(pCloseBtn, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
+    connect(pMaximumBtn, &QPushButton::clicked, this, &TitleBar::onClicked);
+    connect(pMinimumBtn, &QPushButton::clicked, this, &TitleBar::onClicked);
+    connect(pCloseBtn, &QPushButton::clicked, this, &TitleBar::onClicked);
 }
 
 void TitleBar::mouseDoubleClickEvent(QMouseEvent *event)

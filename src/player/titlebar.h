@@ -17,8 +17,6 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void mouseReleaseEvent(QMouseEvent *event);
     virtual bool eventFilter(QObject *obj, QEvent *event);
-
-private slots:
     void onClicked();
 
 private:

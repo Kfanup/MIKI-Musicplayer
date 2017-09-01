@@ -3,38 +3,39 @@
 
 #include <QWidget>
 #include <QSlider>
+#include <QToolBar>
 #include <QToolButton>
 #include "mplayer.h"
 
-class MusicToolBar : public QWidget {
+class MusicToolBar : public QWidget
+{
     Q_OBJECT
 public:
-    explicit MusicToolBar(QWidget* parent = 0);
-    static QSlider* volumeSlider;
+    explicit MusicToolBar(QWidget *parent = 0);
+    static QSlider *volumeSlider;
+    //    void onAddSongClicked();
+    //    void onAddSongDirClicked();
+    void onPlayModeBtnClicked();
+    void onPreviousBtnClicked();
+    void onPauseBtnClicked();
+    void onNextBtnClicked();
+    QAction *addSong;
+    QAction *addSongDir;
 
 signals:
-    void orderBtnClicked();
-    void randoBtnClicked();
+    //    void addSongClicked();
+    //    void addSongDirClicked();
+    void playModeBtnClicked();
     void previousBtnClicked();
     void pauseBtnClicked();
     void nextBtnClicked();
 
-public
-slots:
-    void onOrderBtnClicked();
-    void onRandomBtnClicked();
-    void onPreviousBtnClicked();
-    void onPauseBtnClicked();
-    void onNextBtnClicked();
-
 private:
-    QToolButton* orderBtn;
-    QToolButton* randomBtn;
-    QToolButton* previousBtn;
-    QToolButton* pauseBtn;
-    QToolButton* nextBtn;
-
+    QToolBar *toolBar;
+    QToolButton *playModeBtn;
+    QToolButton *previousBtn;
+    QToolButton *pauseBtn;
+    QToolButton *nextBtn;
 };
-
 
 #endif // MUSICTOOLBAR_H

@@ -1,33 +1,32 @@
-#ifndef MPLAYER_H
-#define MPLAYER_H
+#pragma once
 
 #include <QDialog>
+#include <QObject>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QStackedWidget>
 #include <QtMultimedia/QMediaPlayer>
+#include <QtMultimedia/QMediaPlaylist>
 #include "nowplayingwidget.h"
 #include "playlistwidget.h"
 #include "musicsliderwidget.h"
 #include "musictoolbar.h"
 #include "titlebar.h"
+#include "util/musicfilemanager.h"
 
-class NowPlayingWidget;
 class MusicToolBar;
-class TitleBar;
-class MPlayer : public QDialog
+class MPlayer : public QWidget
 {
     Q_OBJECT
 
 public:
-    MPlayer(QDialog *parent = 0);
+    MPlayer(QWidget *parent = 0);
     ~MPlayer();
     void setInitStyle();
     void setInitWidget();
-
-public slots:
-    void onOrderBtnClicked();
-    void onRandomBtnClicked();
+    void onAddSongClicked();
+    void onAddSongDirClicked();
+    void onPlayModeBtnClicked();
     void onPreviousBtnClicked();
     void onPausetnClicked();
     void onNextBtnClicked();
@@ -45,9 +44,10 @@ private:
     MusicSliderWidget *musicsliderwidget = NULL;
     MusicToolBar *musictoolbar = NULL;
     TitleBar *titlebar = NULL;
+    MusicFileManager *musicfilemanager = NULL;
 
 private:
-    QMediaPlayer *myplayer;
+    QMediaPlayer *myPlayer;
+    QMediaPlaylist *playList;
+    QFileInfoList songList;
 };
-
-#endif // MPLAYER_H

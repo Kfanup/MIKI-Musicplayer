@@ -5,7 +5,7 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
     : QWidget(parent)
 {
     setFixedSize(300, 180);
-    setStyleSheet("color:white");
+    setStyleSheet("color:black");
 
     QString strHeightText = "<p style=\"line-height:%1%\">%2<p>";
     songName = strHeightText.arg(300).arg(songName);

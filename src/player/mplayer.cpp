@@ -1,13 +1,14 @@
 #include "mplayer.h"
 #include <QtGlobal>
 
-MPlayer::MPlayer(QDialog *parent)
-    : QDialog(parent)
+MPlayer::MPlayer(QWidget *parent)
+    : QWidget(parent)
 {
     setInitStyle();
     setInitWidget();
 
     titlebar = new TitleBar(this);
+    musicfilemanager = new MusicFileManager(this);
 
     mainvblayout = new QVBoxLayout;
     mainvblayout->addWidget(titlebar);
@@ -19,18 +20,24 @@ MPlayer::MPlayer(QDialog *parent)
 
     setLayout(mainvblayout);
 
-    myplayer = new QMediaPlayer;
+    myPlayer = new QMediaPlayer;
+    playList = new QMediaPlaylist;
 
-    connect(musictoolbar, SIGNAL(orderBtnClicked()), this, SLOT(onOrderBtnClicked()));
-    connect(musictoolbar, SIGNAL(randoBtnClicked()), this, SLOT(onRandomBtnClicked()));
-    connect(musictoolbar, SIGNAL(previousBtnClicked()), this, SLOT(onPreviousBtnClicked()));
-    connect(musictoolbar, SIGNAL(pauseBtnClicked()), this, SLOT(onPausetnClicked()));
-    connect(musictoolbar, SIGNAL(nextBtnClicked()), this, SLOT(onNextBtnClicked()));
+    connect(musictoolbar->addSong, &QAction::triggered, this, &MPlayer::onAddSongClicked);
+    connect(musictoolbar->addSongDir, &QAction::triggered, this, &MPlayer::onAddSongDirClicked);
+    connect(musictoolbar, &MusicToolBar::playModeBtnClicked, this, &MPlayer::onPlayModeBtnClicked);
+    connect(musictoolbar, &MusicToolBar::previousBtnClicked, this, &MPlayer::onPreviousBtnClicked);
+    connect(musictoolbar, &MusicToolBar::pauseBtnClicked, this, &MPlayer::onPausetnClicked);
+    connect(musictoolbar, &MusicToolBar::nextBtnClicked, this, &MPlayer::onNextBtnClicked);
 
-    connect(nowPlayingWidget, SIGNAL(nowPlayingClicked()), this, SLOT(onNowPlayingClicked()));
-    connect(nowPlayingWidget, SIGNAL(playingListClicked()), this, SLOT(onPlayingListClicked()));
-    connect(playinglistwidget, SIGNAL(nowPlayingClicked()), this, SLOT(onNowPlayingClicked()));
-    connect(playinglistwidget, SIGNAL(playingListClicked()), this, SLOT(onPlayingListClicked()));
+    connect(nowPlayingWidget, &NowPlayingWidget::nowPlayingClicked, this,
+            &MPlayer::onNowPlayingClicked);
+    connect(nowPlayingWidget, &NowPlayingWidget::playingListClicked, this,
+            &MPlayer::onPlayingListClicked);
+    connect(playinglistwidget, &PlayListWidget::nowPlayingClicked, this,
+            &MPlayer::onNowPlayingClicked);
+    connect(playinglistwidget, &PlayListWidget::playingListClicked, this,
+            &MPlayer::onPlayingListClicked);
 }
 
 MPlayer::~MPlayer()
@@ -48,15 +55,15 @@ void MPlayer::setInitStyle()
 
     this->setWindowFlags(Qt::CustomizeWindowHint);
     this->resize(640, 320);
-    this->setStyleSheet("background-color:#1E90FF");
-    this->setWindowTitle(tr("MIKI MUSIC PLAYER"));
+    this->setStyleSheet("background-color:white");
+    //    this->setWindowTitle(tr("MIKI MUSIC PLAYER"));
 }
 
 void MPlayer::setInitWidget()
 {
     //播放界面与歌曲列表切换
     nowPlayingWidget = new NowPlayingWidget;
-    playinglistwidget = new PlayListWidget;
+    playinglistwidget = new PlayListWidget(songList);
     musicStacked = new QStackedWidget;
 
     musicStacked->addWidget(nowPlayingWidget);
@@ -87,7 +94,7 @@ void MPlayer::setInitWidget()
     toolhblayout->setMargin(0);
 }
 
-void MPlayer::onNowPlayingClicked()
+inline void MPlayer::onNowPlayingClicked()
 {
     if (musicStacked->currentIndex() == 0) {
         musicStacked->setCurrentIndex(1);
@@ -96,7 +103,7 @@ void MPlayer::onNowPlayingClicked()
     }
 }
 
-void MPlayer::onPlayingListClicked()
+inline void MPlayer::onPlayingListClicked()
 {
     if (musicStacked->currentIndex() == 0) {
         musicStacked->setCurrentIndex(1);
@@ -105,11 +112,17 @@ void MPlayer::onPlayingListClicked()
     }
 }
 
-void MPlayer::onOrderBtnClicked()
+inline void MPlayer::onAddSongClicked()
 {
+    songList = musicfilemanager->addMedia();
 }
 
-void MPlayer::onRandomBtnClicked()
+inline void MPlayer::onAddSongDirClicked()
+{
+    songList = musicfilemanager->addMediaDir();
+}
+
+void MPlayer::onPlayModeBtnClicked()
 {
 }
 
