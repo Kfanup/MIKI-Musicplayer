@@ -1,5 +1,4 @@
-#ifndef PLAYLISTWIDGET_H
-#define PLAYLISTWIDGET_H
+#pragma once
 
 #include <QWidget>
 #include <QLabel>
@@ -31,5 +30,3 @@ private:
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
 };
-
-#endif // PLAYLISTWIDGET_H

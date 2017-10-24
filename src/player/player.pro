@@ -32,7 +32,7 @@ SOURCES += main.cpp\
     musictoolbar.cpp \
     titlebar.cpp \
     playlistwidget.cpp \
-    ../backend/util/musicfilemanager.cpp
+#    ../backend/util/musicfilemanager.cpp
 
 HEADERS  += mplayer.h \
     nowplayingwidget.h \
@@ -40,7 +40,7 @@ HEADERS  += mplayer.h \
     musictoolbar.h \
     titlebar.h \
     playlistwidget.h \
-    ../backend/util/musicfilemanager.h
+#    ../backend/util/musicfilemanager.h
 
 DISTFILES +=
 

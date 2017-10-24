@@ -6,29 +6,21 @@ MusicToolBar::MusicToolBar(QWidget *parent)
     : QWidget(parent)
 {
     setStyleSheet("color:white");
-    toolBar = new QToolBar;
     playModeBtn = new QToolButton;
     previousBtn = new QToolButton;
     pauseBtn = new QToolButton;
     pauseBtn->setFixedSize(40, 40);
     nextBtn = new QToolButton;
 
-    addSong = new QAction("添加音乐", this);
-    addSongDir = new QAction("添加音乐文件", this);
-    toolBar->addAction(addSong);
-    toolBar->addAction(addSongDir);
-
 #ifdef Q_OS_WIN
     pauseBtn->setIcon(QIcon(":/new/prefix1/res/music_logo.ico"));
     previousBtn->setIcon(QIcon(":/new/prefix1/res/previous.ico"));
     playModeBtn->setIcon(QIcon(":/new/prefix1/res/random.ico"));
-    //    toolBar->setIcon(QIcon(":/new/prefix1/res/setting.ico"));
     nextBtn->setIcon(QIcon(":/new/prefix1/res/next.ico"));
 #else
     pauseBtn->setIcon(QIcon(":/new/prefix1/res/pause.png"));
     previousBtn->setIcon(QIcon(":/new/prefix1/res/previous.png"));
     playModeBtn->setIcon(QIcon(":/new/prefix1/res/order.png"));
-    //    toolBar->setIcon(QIcon(":/new/prefix1/res/setting.png"));
     nextBtn->setIcon(QIcon(":/new/prefix1/res/next.png"));
 #endif
 
@@ -40,8 +32,6 @@ MusicToolBar::MusicToolBar(QWidget *parent)
 
     QHBoxLayout *mainlayout = new QHBoxLayout;
     mainlayout->setAlignment(Qt::AlignCenter);
-    mainlayout->addWidget(toolBar);
-    mainlayout->setSpacing(15);
     mainlayout->addWidget(playModeBtn);
     mainlayout->setSpacing(15);
     mainlayout->addWidget(previousBtn);
@@ -54,16 +44,6 @@ MusicToolBar::MusicToolBar(QWidget *parent)
 
     setLayout(mainlayout);
 }
-
-// inline void MusicToolBar::onAddSongClicked()
-//{
-//    emit addSongClicked();
-//}
-
-// inline void MusicToolBar::onAddSongDirClicked()
-//{
-//    emit addSongDirClicked();
-//}
 
 inline void MusicToolBar::onPlayModeBtnClicked()
 {

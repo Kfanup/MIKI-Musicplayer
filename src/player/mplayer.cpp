@@ -23,8 +23,8 @@ MPlayer::MPlayer(QWidget *parent)
     myPlayer = new QMediaPlayer;
     playList = new QMediaPlaylist;
 
-    connect(musictoolbar->addSong, &QAction::triggered, this, &MPlayer::onAddSongClicked);
-    connect(musictoolbar->addSongDir, &QAction::triggered, this, &MPlayer::onAddSongDirClicked);
+    connect(titlebar, &TitleBar::addMedia, this, &MPlayer::onAddSongClicked);
+    connect(titlebar, &TitleBar::addMediaDir, this, &MPlayer::onAddSongDirClicked);
     connect(musictoolbar, &MusicToolBar::playModeBtnClicked, this, &MPlayer::onPlayModeBtnClicked);
     connect(musictoolbar, &MusicToolBar::previousBtnClicked, this, &MPlayer::onPreviousBtnClicked);
     connect(musictoolbar, &MusicToolBar::pauseBtnClicked, this, &MPlayer::onPausetnClicked);
@@ -44,6 +44,9 @@ MPlayer::~MPlayer()
 {
 }
 
+/***
+ ** @brief 初始化风格
+ **/
 void MPlayer::setInitStyle()
 {
 
@@ -56,9 +59,11 @@ void MPlayer::setInitStyle()
     this->setWindowFlags(Qt::CustomizeWindowHint);
     this->resize(640, 320);
     this->setStyleSheet("background-color:white");
-    //    this->setWindowTitle(tr("MIKI MUSIC PLAYER"));
 }
 
+/***
+ ** @brief 初始化窗口
+ **/
 void MPlayer::setInitWidget()
 {
     //播放界面与歌曲列表切换
@@ -94,6 +99,9 @@ void MPlayer::setInitWidget()
     toolhblayout->setMargin(0);
 }
 
+/***
+ ** @brief 一系列鼠标点击事件
+ **/
 inline void MPlayer::onNowPlayingClicked()
 {
     if (musicStacked->currentIndex() == 0) {

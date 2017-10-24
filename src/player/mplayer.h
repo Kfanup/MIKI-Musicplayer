@@ -5,22 +5,24 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QStackedWidget>
+#include <QGraphicsOpacityEffect>
 #include <QtMultimedia/QMediaPlayer>
 #include <QtMultimedia/QMediaPlaylist>
+#include "titlebar.h"
 #include "nowplayingwidget.h"
 #include "playlistwidget.h"
 #include "musicsliderwidget.h"
 #include "musictoolbar.h"
-#include "titlebar.h"
 #include "util/musicfilemanager.h"
 
 class MusicToolBar;
+class TitleBar;
 class MPlayer : public QWidget
 {
     Q_OBJECT
 
 public:
-    MPlayer(QWidget *parent = 0);
+    explicit MPlayer(QWidget *parent = 0);
     ~MPlayer();
     void setInitStyle();
     void setInitWidget();

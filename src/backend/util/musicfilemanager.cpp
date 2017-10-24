@@ -54,7 +54,7 @@ QFileInfoList MusicFileManager::addMedia()
     fileDialog = new QFileDialog(this);
     QString filePath = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).at(0);
     //    QDir dir(filePath);
-    QStringList filePaths =
-        fileDialog->getOpenFileNames(this, "请选择音乐文件", filePath, "Media file(*.mp3 *.wav)");
+    QStringList filePaths = fileDialog->getOpenFileNames(this, "请选择音乐文件", filePath,
+                                                         "Media file(*.mp3 *.wma *.wav)");
     return addMusicFiles(filePaths);
 }

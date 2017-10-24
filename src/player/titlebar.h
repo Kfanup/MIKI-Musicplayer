@@ -1,8 +1,10 @@
-#ifndef TITLEBAR_H
-#define TITLEBAR_H
+#pragma once
 
 #include <QWidget>
 #include <QLabel>
+#include <QPoint>
+#include "mplayer.h"
+#include <QMouseEvent>
 #include <QPushButton>
 
 class TitleBar : public QWidget
@@ -10,6 +12,10 @@ class TitleBar : public QWidget
     Q_OBJECT
 public:
     explicit TitleBar(QWidget *parent = 0);
+
+signals:
+    void addMedia();
+    void addMediaDir();
 
 protected:
     virtual void mouseDoubleClickEvent(QMouseEvent *event);
@@ -24,12 +30,12 @@ private:
 
 private:
     bool mMoveing = false;
-    QPoint mPoint;
+    QPoint ptPress;
+    QPoint ptMove;
     QLabel *pIconLabel;
     QLabel *pTitleLabel;
+    QPushButton *pMenuBtn;
     QPushButton *pMinimumBtn;
     QPushButton *pMaximumBtn;
     QPushButton *pCloseBtn;
 };
-
-#endif // TITLEBAR_H

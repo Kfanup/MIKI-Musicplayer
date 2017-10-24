@@ -1,6 +1,6 @@
 #include <QEvent>
+#include <QMenu>
 #include <QHBoxLayout>
-#include <QMouseEvent>
 #include <QApplication>
 #include "titlebar.h"
 
@@ -17,6 +17,7 @@ TitleBar::TitleBar(QWidget *parent)
 
     pIconLabel = new QLabel;
     pTitleLabel = new QLabel;
+    pMenuBtn = new QPushButton;
     pMaximumBtn = new QPushButton;
     pMinimumBtn = new QPushButton;
     pCloseBtn = new QPushButton;
@@ -31,6 +32,7 @@ TitleBar::TitleBar(QWidget *parent)
     pTitleLabel->setText("MIKI MUSIC PLAYER");
     pTitleLabel->setStyleSheet("font-size: 16px;font-weight:500;color:black;");
 
+    pMenuBtn->setFixedSize(27, 22);
     pMaximumBtn->setFixedSize(27, 22);
     pMinimumBtn->setFixedSize(27, 22);
     pCloseBtn->setFixedSize(27, 22);
@@ -44,14 +46,24 @@ TitleBar::TitleBar(QWidget *parent)
     pMinimumBtn->setToolTip("最大化");
     pCloseBtn->setToolTip("关闭");
 
+    pMenuBtn->setIcon(QIcon(":/new/prefix1/res/setting.png"));
     pMaximumBtn->setIcon(QIcon(":/new/prefix1/res/maximize.png"));
     pMinimumBtn->setIcon(QIcon(":/new/prefix1/res/min.png"));
     pCloseBtn->setIcon(QIcon(":/new/prefix1/res/close.png"));
+
+    QMenu *pMenu = new QMenu(this);
+    QAction *addMediaAct = new QAction(QString("添加音乐文件"));
+    QAction *addMediaDirAct = new QAction(QString("添加音乐文件夹"));
+    pMenu->addAction(addMediaAct);
+    pMenu->addAction(addMediaDirAct);
+    pMenuBtn->setMenu(pMenu);
+    pMenuBtn->setStyleSheet("QPushButton::menu-indicator{image:none;}"); //取消菜单的三角下拉图标
 
     QHBoxLayout *playout = new QHBoxLayout;
     playout->addWidget(pIconLabel);
     playout->addSpacing(10);
     playout->addWidget(pTitleLabel);
+    playout->addWidget(pMenuBtn);
     playout->addWidget(pMinimumBtn);
     playout->addWidget(pMaximumBtn);
     playout->addWidget(pCloseBtn);
@@ -60,6 +72,8 @@ TitleBar::TitleBar(QWidget *parent)
 
     setLayout(playout);
 
+    connect(addMediaAct, &QAction::triggered, this, &TitleBar::addMedia);
+    connect(addMediaDirAct, &QAction::triggered, this, &TitleBar::addMediaDir);
     connect(pMaximumBtn, &QPushButton::clicked, this, &TitleBar::onClicked);
     connect(pMinimumBtn, &QPushButton::clicked, this, &TitleBar::onClicked);
     connect(pCloseBtn, &QPushButton::clicked, this, &TitleBar::onClicked);
@@ -72,6 +86,10 @@ void TitleBar::mouseDoubleClickEvent(QMouseEvent *event)
     emit pMaximumBtn->clicked();
 }
 
+/***
+ ** @brief 鼠标按下事件
+ ** @param event
+ **/
 void TitleBar::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
@@ -84,28 +102,55 @@ void TitleBar::mousePressEvent(QMouseEvent *event)
 //    }
 //    event->ignore();
 #else
-    mMoveing = true;
-    mPoint = event->globalPos() - pos();
-    return QWidget::mousePressEvent(event);
+    if (event->button() == Qt::LeftButton) {
+        //设置鼠标样式为手势
+        setCursor(Qt::OpenHandCursor);
+
+        mMoveing = true;
+
+        ptPress = event->globalPos();
+    }
+    event->ignore();
 #endif
 }
 
+/***
+ ** @brief 鼠标移动事件
+ ** @param event
+ **/
 void TitleBar::mouseMoveEvent(QMouseEvent *event)
 {
-    if (mMoveing && (event->buttons() && Qt::LeftButton)
-        && ((event->globalPos() - mPoint).manhattanLength() > QApplication::startDragDistance())) {
-        move(event->globalPos() - mPoint);
-        mPoint = event->globalPos() - pos();
+    if (mMoveing) {
+        ptMove = event->globalPos();
+        MPlayer *pWidget = qobject_cast<MPlayer *>(parent());
+        pWidget->move(pWidget->pos() + ptMove - ptPress);
+        ptPress = ptMove;
     }
-    return QWidget::mouseMoveEvent(event);
+    event->ignore();
 }
 
+/***
+ ** @brief 鼠标释放事件
+ ** @param event
+ **/
 void TitleBar::mouseReleaseEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
-    mMoveing = false;
+    if (event->button() == Qt::LeftButton) {
+        //设置鼠标样式为正常
+        setCursor(Qt::ArrowCursor);
+        if (event->button() == Qt::LeftButton) {
+            mMoveing = false;
+        }
+    }
+    event->ignore();
 }
 
+/***
+ ** @brief 事件过滤器
+ ** @param obj
+ ** @param event
+ ** @return
+ **/
 bool TitleBar::eventFilter(QObject *obj, QEvent *event)
 {
     switch (event->type()) {
@@ -136,6 +181,9 @@ bool TitleBar::eventFilter(QObject *obj, QEvent *event)
     return QWidget::eventFilter(obj, event);
 }
 
+/***
+ ** @brief 鼠标点击按钮槽函数
+ **/
 void TitleBar::onClicked()
 {
     QPushButton *pButton = qobject_cast<QPushButton *>(sender());
@@ -151,6 +199,9 @@ void TitleBar::onClicked()
     }
 }
 
+/***
+ ** @brief 更新窗口大小
+ **/
 void TitleBar::updateMaximumsize()
 {
     QWidget *window = this->window();

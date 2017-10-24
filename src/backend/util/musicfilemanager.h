@@ -17,6 +17,6 @@ public:
     void updateMusicFiles();
 
 private:
-    QStringList filter = { "*.mp3", "*.wav" };
+    QStringList filter = { "*.mp3", "*.wav", "*.wma" };
     QFileDialog *fileDialog;
 };

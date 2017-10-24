@@ -1,5 +1,4 @@
-#ifndef NOWPLAYINGWIDGET_H
-#define NOWPLAYINGWIDGET_H
+#pragma once
 
 #include <QWidget>
 #include <QLabel>
@@ -30,5 +29,3 @@ private:
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);
 };
-
-#endif // NOWPLAYINGWIDGET_H
