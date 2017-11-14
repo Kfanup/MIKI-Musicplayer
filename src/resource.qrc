@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>res/icon_unix/close.png</file>
+        <file>res/icon_unix/itemloop.png</file>
+        <file>res/icon_unix/itemonce.png</file>
+        <file>res/icon_unix/loop.png</file>
+        <file>res/icon_unix/maximize.png</file>
+        <file>res/icon_unix/min.png</file>
+        <file>res/icon_unix/music_logo.png</file>
+        <file>res/icon_unix/next.png</file>
+        <file>res/icon_unix/order.png</file>
+        <file>res/icon_unix/pause.png</file>
+        <file>res/icon_unix/play.png</file>
+        <file>res/icon_unix/previous.png</file>
+        <file>res/icon_unix/random.png</file>
+        <file>res/icon_unix/setting.png</file>
+        <file>res/icon_win/close.ico</file>
+        <file>res/icon_win/itemloop.ico</file>
+        <file>res/icon_win/itemonce.ico</file>
+        <file>res/icon_win/loop.ico</file>
+        <file>res/icon_win/maximize.ico</file>
+        <file>res/icon_win/min.ico</file>
+        <file>res/icon_win/music_logo.ico</file>
+        <file>res/icon_win/next.ico</file>
+        <file>res/icon_win/order.ico</file>
+        <file>res/icon_win/pause.ico</file>
+        <file>res/icon_win/play.ico</file>
+        <file>res/icon_win/random.ico</file>
+        <file>res/icon_win/previous.ico</file>
+        <file>res/icon_win/setting.ico</file>
+    </qresource>
+</RCC>

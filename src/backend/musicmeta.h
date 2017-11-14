@@ -4,6 +4,13 @@
 #include <QString>
 #include <QFileInfo>
 #include <QSharedPointer>
+#include <taglib/tag.h>
+#include <taglib/fileref.h>
+#include <taglib/taglib.h>
+#include <taglib/tpropertymap.h>
+extern "C" {
+#include "libavformat/avformat.h"
+}
 
 class MusicMeta
 {
@@ -13,7 +20,7 @@ public:
     QString title;
     QString author;
     QString album;
-    QString mediaType;
+    //    QString mediaType;
     //    QStringList keyWords;
 
     qint64 timestamp = 0;

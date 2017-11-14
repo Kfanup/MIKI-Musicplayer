@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QMap>
+#include <QTime>
 
 #include "musicmeta.h"
 
@@ -90,5 +91,18 @@ namespace MMusic {
 QString filePathToHash(const QString &filePath)
 {
     return QString(QCryptographicHash::hash(filePath.toUtf8(), QCryptographicHash::Md5).toHex());
+}
+
+QString length2String(const qint64 length)
+{
+    auto len = length / 1000;
+    int hour = len / 3600;
+    QTime t(0, len % 3600 / 60, len % 60);
+    if (hour > 0) {
+        return QString("%1:%2").arg(hour).arg(t.toString("mm:ss"));
+
+    } else {
+        return t.toString("mm:ss");
+    }
 }
 }

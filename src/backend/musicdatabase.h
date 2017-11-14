@@ -23,6 +23,8 @@ signals:
 
 public slots:
     void addPlaylist(const PlaylistMeta &PlaylistMeta);
+    void addMusicMeta(const MusicMeta meta);
+    void addMusicMetaList(const QList<MusicMeta> metaList);
     void removePlaylist(const PlaylistMeta &PlaylistMeta);
     void removeMusic(const MetaPtr meta, const PlaylistMeta &PlaylistMeta);
 

@@ -12,7 +12,7 @@
 TitleBar::TitleBar(QWidget *parent)
     : QWidget(parent)
 {
-    setFixedHeight(27);
+    setFixedHeight(28);
     setStyleSheet("color:black");
 
     pIconLabel = new QLabel;
@@ -22,10 +22,10 @@ TitleBar::TitleBar(QWidget *parent)
     pMinimumBtn = new QPushButton;
     pCloseBtn = new QPushButton;
 
-    pIconLabel->setFixedSize(28, 28);
+    pIconLabel->setFixedSize(27, 27);
     pIconLabel->setScaledContents(true);
 
-    QPixmap pixmap(":/new/prefix1/res/music_logo.png");
+    QPixmap pixmap(":/images/res/icon_unix/music_logo.png");
     pIconLabel->setPixmap(pixmap);
 
     pTitleLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -42,14 +42,14 @@ TitleBar::TitleBar(QWidget *parent)
     pMinimumBtn->setObjectName("minimumsizeBtn");
     pCloseBtn->setObjectName("closeBtn");
 
-    pMaximumBtn->setToolTip("最小化");
-    pMinimumBtn->setToolTip("最大化");
+    pMaximumBtn->setToolTip("最大化");
+    pMinimumBtn->setToolTip("最小化");
     pCloseBtn->setToolTip("关闭");
 
-    pMenuBtn->setIcon(QIcon(":/new/prefix1/res/setting.png"));
-    pMaximumBtn->setIcon(QIcon(":/new/prefix1/res/maximize.png"));
-    pMinimumBtn->setIcon(QIcon(":/new/prefix1/res/min.png"));
-    pCloseBtn->setIcon(QIcon(":/new/prefix1/res/close.png"));
+    pMenuBtn->setIcon(QIcon(":/images/res/icon_unix/setting.png"));
+    pMaximumBtn->setIcon(QIcon(":/images/res/icon_unix/maximize.png"));
+    pMinimumBtn->setIcon(QIcon(":/images/res/icon_unix/min.png"));
+    pCloseBtn->setIcon(QIcon(":/images/res/icon_unix/close.png"));
 
     QMenu *pMenu = new QMenu(this);
     QAction *addMediaAct = new QAction(QString("添加音乐文件"));

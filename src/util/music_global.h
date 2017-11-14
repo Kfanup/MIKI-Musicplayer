@@ -1,7 +1,8 @@
 #pragma once
 
 namespace MMusic {
-QString filePathToHash(const QString &filePath);
+extern QString filePathToHash(const QString &filePath);
+extern QString length2String(const qint64 length);
 
 template <class T>
 class MSingleTon

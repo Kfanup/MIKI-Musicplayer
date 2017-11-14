@@ -9,8 +9,13 @@ MusicToolBar::MusicToolBar(QWidget *parent)
     playModeBtn = new QToolButton;
     previousBtn = new QToolButton;
     pauseBtn = new QToolButton;
-    pauseBtn->setFixedSize(40, 40);
     nextBtn = new QToolButton;
+
+    playModeBtn->sizePolicy();
+    previousBtn->sizePolicy();
+    pauseBtn->sizePolicy();
+    nextBtn->sizePolicy();
+    pauseBtn->setMinimumSize(40, 40);
 
 #ifdef Q_OS_WIN
     pauseBtn->setIcon(QIcon(":/new/prefix1/res/music_logo.ico"));
@@ -18,10 +23,10 @@ MusicToolBar::MusicToolBar(QWidget *parent)
     playModeBtn->setIcon(QIcon(":/new/prefix1/res/random.ico"));
     nextBtn->setIcon(QIcon(":/new/prefix1/res/next.ico"));
 #else
-    pauseBtn->setIcon(QIcon(":/new/prefix1/res/pause.png"));
-    previousBtn->setIcon(QIcon(":/new/prefix1/res/previous.png"));
-    playModeBtn->setIcon(QIcon(":/new/prefix1/res/order.png"));
-    nextBtn->setIcon(QIcon(":/new/prefix1/res/next.png"));
+    pauseBtn->setIcon(QIcon(":/images/res/icon_unix/pause.png"));
+    previousBtn->setIcon(QIcon(":/images/res/icon_unix/previous.png"));
+    playModeBtn->setIcon(QIcon(":/images/res/icon_unix/order.png"));
+    nextBtn->setIcon(QIcon(":/images/res/icon_unix/next.png"));
 #endif
 
     QSlider *volumeSlider = new QSlider(Qt::Horizontal);

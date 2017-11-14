@@ -21,18 +21,18 @@ QFileInfoList MusicFileManager::getMusicFiles(QString path)
     return file_list;
 }
 
-QFileInfoList MusicFileManager::addMusicFiles(QStringList paths)
-{
-    QFileInfoList file_list;
-    QFileInfo fileInfo;
-    foreach (QString filePath, paths) {
-        fileInfo.setFile(filePath);
-        if (fileInfo.isFile()) {
-            file_list.append(filePath);
-        }
-    }
-    return file_list;
-}
+// QStringList MusicFileManager::addMusicFiles(QStringList paths)
+//{
+//    QFileInfoList file_list;
+//    QFileInfo fileInfo;
+//    foreach (QString filePath, paths) {
+//        fileInfo.setFile(filePath);
+//        if (fileInfo.isFile()) {
+//            file_list.append(filePath);
+//        }
+//    }
+//    return QStringList(file_list);
+//}
 
 void MusicFileManager::updateMusicFiles()
 {
@@ -43,18 +43,32 @@ QFileInfoList MusicFileManager::addMediaDir()
     fileDialog = new QFileDialog(this);
     QString dirPath = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).at(0);
     //    QDir dir(dirPath);
-    //    fileDialog->setFileMode(QFileDialog::Directory);
-    //    fileDialog->setDirectory(dir);
     dirPath = fileDialog->getExistingDirectory(this, "请选择音乐文件夹", dirPath);
     return getMusicFiles(dirPath);
 }
 
-QFileInfoList MusicFileManager::addMedia()
+QStringList MusicFileManager::addMedia()
 {
     fileDialog = new QFileDialog(this);
     QString filePath = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).at(0);
-    //    QDir dir(filePath);
+
     QStringList filePaths = fileDialog->getOpenFileNames(this, "请选择音乐文件", filePath,
                                                          "Media file(*.mp3 *.wma *.wav)");
-    return addMusicFiles(filePaths);
+    return filePaths;
+}
+
+MetaPtr MusicFileManager::meta2metaPtr(MusicMeta meta)
+{
+    MetaPtr metaptr = MetaPtr(new MusicMeta);
+    metaptr->hash = meta.hash;
+    metaptr->album = meta.album;
+    metaptr->author = meta.author;
+    metaptr->favourite = meta.favourite;
+    metaptr->length = meta.length;
+    metaptr->localPath = meta.localPath;
+    metaptr->offset = meta.offset;
+    metaptr->size = meta.size;
+    metaptr->timestamp = meta.timestamp;
+    metaptr->title = meta.title;
+    return metaptr;
 }

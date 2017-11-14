@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QFileInfoList>
 #include <QFileDialog>
+#include "musicmeta.h"
 
 class MusicFileManager : public QWidget
 {
@@ -11,10 +12,11 @@ class MusicFileManager : public QWidget
 public:
     explicit MusicFileManager(QWidget *parent = nullptr);
     QFileInfoList getMusicFiles(QString path);
-    QFileInfoList addMusicFiles(QStringList paths);
+    //    QStringList addMusicFiles(QStringList paths);
     QFileInfoList addMediaDir();
-    QFileInfoList addMedia();
+    QStringList addMedia();
     void updateMusicFiles();
+    MetaPtr meta2metaPtr(MusicMeta meta);
 
 private:
     QStringList filter = { "*.mp3", "*.wav", "*.wma" };

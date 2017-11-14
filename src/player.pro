@@ -3,10 +3,11 @@
 # Project created by QtCreator 2017-03-16T14:14:51
 #
 #-------------------------------------------------
+include($$PWD/widgets/widgets.pri)
+include($$PWD/backend/backend.pri)
+include($$PWD/util/util.pri)
 
-include($$PWD/../config/config.pri)
-
-QT       += core gui multimedia
+QT       += core gui multimedia sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -24,26 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-
-SOURCES += main.cpp\
-        mplayer.cpp \
-    nowplayingwidget.cpp \
-    musicsliderwidget.cpp \
-    musictoolbar.cpp \
-    titlebar.cpp \
-    playlistwidget.cpp \
-#    ../backend/util/musicfilemanager.cpp
-
-HEADERS  += mplayer.h \
-    nowplayingwidget.h \
-    musicsliderwidget.h \
-    musictoolbar.h \
-    titlebar.h \
-    playlistwidget.h \
-#    ../backend/util/musicfilemanager.h
-
-DISTFILES +=
+INCLUDEPATH += backend/ util/ widgets/
 
 RESOURCES += \
-    music.qrc
-RC_FILE += icon.rc
+    resource.qrc

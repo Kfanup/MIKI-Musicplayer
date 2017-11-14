@@ -13,7 +13,7 @@ MPlayer::MPlayer(QWidget *parent)
     mainvblayout = new QVBoxLayout;
     mainvblayout->addWidget(titlebar);
     mainvblayout->addLayout(tophblayout);
-    mainvblayout->addStretch(2);
+    mainvblayout->addStretch(5);
     mainvblayout->addLayout(btmvblayout);
     mainvblayout->addStretch(1);
     mainvblayout->addLayout(toolhblayout);
@@ -22,6 +22,8 @@ MPlayer::MPlayer(QWidget *parent)
 
     myPlayer = new QMediaPlayer;
     playList = new QMediaPlaylist;
+    musicmeta = new MusicMeta;
+    musiclibrary = new MusicLibrary;
 
     connect(titlebar, &TitleBar::addMedia, this, &MPlayer::onAddSongClicked);
     connect(titlebar, &TitleBar::addMediaDir, this, &MPlayer::onAddSongDirClicked);
@@ -53,11 +55,11 @@ void MPlayer::setInitStyle()
 #ifdef Q_OS_WIN
     this->setWindowIcon(QIcon(":/new/prefix1/res/music_logo.ico"));
 #else
-    this->setWindowIcon(QIcon(":/new/prefix1/res/music_logo.png"));
+    this->setWindowIcon(QIcon(":/images/res/icon_unix/music_logo.png"));
 #endif
 
     this->setWindowFlags(Qt::CustomizeWindowHint);
-    this->resize(640, 320);
+    this->resize(960, 640);
     this->setStyleSheet("background-color:white");
 }
 
@@ -66,9 +68,11 @@ void MPlayer::setInitStyle()
  **/
 void MPlayer::setInitWidget()
 {
+
+    allSongList = MusicDatabase::instance()->getAllMeta();
     //播放界面与歌曲列表切换
     nowPlayingWidget = new NowPlayingWidget;
-    playinglistwidget = new PlayListWidget(songList);
+    playinglistwidget = new PlayListWidget(allSongList);
     musicStacked = new QStackedWidget;
 
     musicStacked->addWidget(nowPlayingWidget);
@@ -77,7 +81,7 @@ void MPlayer::setInitWidget()
 
     tophblayout = new QHBoxLayout;
     tophblayout->addWidget(musicStacked);
-    tophblayout->addStretch(1);
+    tophblayout->addStretch(0);
     tophblayout->setMargin(5);
 
     //播放进度条
@@ -122,12 +126,30 @@ inline void MPlayer::onPlayingListClicked()
 
 inline void MPlayer::onAddSongClicked()
 {
-    songList = musicfilemanager->addMedia();
+    QStringList songList = musicfilemanager->addMedia();
+    for (auto &song : songList) {
+        QFileInfo fileinfo(song);
+        auto meta = musicmeta->fromLocalfile(fileinfo);
+
+        if (!database->isMusicMetaExist(meta.hash)) {
+            qDebug() << "start to insert media";
+            database->addMusicMeta(meta);
+        }
+    }
 }
 
 inline void MPlayer::onAddSongDirClicked()
 {
-    songList = musicfilemanager->addMediaDir();
+    QFileInfoList songList = musicfilemanager->addMediaDir();
+
+    for (auto &song : songList) {
+        auto meta = musicmeta->fromLocalfile(song);
+
+        if (!database->isMusicMetaExist(meta.hash)) {
+            qDebug() << "start to insert media";
+            database->addMusicMeta(meta);
+        }
+    }
 }
 
 void MPlayer::onPlayModeBtnClicked()

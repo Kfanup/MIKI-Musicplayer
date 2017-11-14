@@ -14,6 +14,9 @@
 #include "musicsliderwidget.h"
 #include "musictoolbar.h"
 #include "util/musicfilemanager.h"
+#include "backend/musicmeta.h"
+#include "backend/musicdatabase.h"
+#include "backend/musiclibrary.h"
 
 class MusicToolBar;
 class TitleBar;
@@ -47,9 +50,12 @@ private:
     MusicToolBar *musictoolbar = NULL;
     TitleBar *titlebar = NULL;
     MusicFileManager *musicfilemanager = NULL;
+    MusicDatabase *database = NULL;
+    MusicMeta *musicmeta = NULL;
+    MusicLibrary *musiclibrary = NULL;
 
 private:
     QMediaPlayer *myPlayer;
     QMediaPlaylist *playList;
-    QFileInfoList songList;
+    QList<MusicMeta> allSongList;
 };

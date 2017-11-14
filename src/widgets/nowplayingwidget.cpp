@@ -4,7 +4,8 @@
 NowPlayingWidget::NowPlayingWidget(QWidget *parent)
     : QWidget(parent)
 {
-    setFixedSize(300, 180);
+    sizePolicy();
+    setMinimumSize(450, 500);
     setStyleSheet("color:black");
 
     QString strHeightText = "<p style=\"line-height:%1%\">%2<p>";
@@ -50,6 +51,12 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
     playListLabel->installEventFilter(this);
 }
 
+/***
+ * @brief 事件过滤器
+ * @param obj
+ * @param ev
+ * @return
+ */
 bool NowPlayingWidget::eventFilter(QObject *obj, QEvent *ev)
 {
     if (obj == nowPlayingLabel)

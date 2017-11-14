@@ -1,5 +1,44 @@
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QDir>
+#include <QStandardPaths>
+#include <QDebug>
 #include "musicdatabase.h"
-#include "databaseconnection.h"
+
+static bool createConnection()
+{
+    QDir dir(QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first());
+    if (!dir.exists()) {
+        dir.mkpath(QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation).first());
+        dir.setPath(
+            QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation).first());
+    }
+    QString cachePath = dir.absolutePath() + QString("/mikimusic.sqlite");
+    qDebug() << cachePath;
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(cachePath);
+    if (!db.open()) {
+        qCritical() << db.lastError() << "please check " << cachePath;
+        qDebug() << "can not open cachepath";
+        return false;
+    }
+
+    QSqlQuery query;
+    query.exec("CREATE TABLE IF NOT EXISTS mymusic (hash TEXT primary key not null, "
+               "timestamp INTEGER, "
+               "title VARCHAR(256), author VARCHAR(256), "
+               "album VARCHAR(256), "
+               "offset INTEGER, length INTEGER, "
+               "size INTEGER, favourite INTEGER(32), "
+               "localpath VARCHAR(256))");
+    query.exec("CREATE TABLE IF NOT EXISTS playlist (id TEXT primary key not null, "
+               "displayname VARCHAR(4096), "
+               "sort_type INTEGER(32), sort_id INTEGER(32)) ");
+    query.exec("CREATE TABLE IF NOT EXISTS artist (id int primary key not null, "
+               "name VARCHAR(20))");
+    return true;
+}
 
 MusicDatabase::MusicDatabase(QObject *parent)
     : QObject(parent)
@@ -9,7 +48,6 @@ MusicDatabase::MusicDatabase(QObject *parent)
 void MusicDatabase::initDatabase()
 {
     createConnection();
-
     QSqlDatabase::database().transaction();
     PlaylistMeta playlistmeta;
     playlistmeta.id = "all";
@@ -31,11 +69,13 @@ void MusicDatabase::initDatabase()
 bool MusicDatabase::isPlayListExist(const QString &id)
 {
     QSqlQuery query;
-    query.prepare("SELECT COUNT(*) FROM playlist where id = :id");
-    query.bindValue(":id", id);
+    QString sqlstring = QString("SELECT COUNT(*) FROM playlist where id = '%1'").arg(id);
+    //    query.prepare("SELECT COUNT(*) FROM playlist where id = :id;");
+    //    query.bindValue(":id", id);
 
-    if (!query.exec()) {
+    if (!query.exec(sqlstring)) {
         qWarning() << query.lastError();
+        qDebug() << "isplaylistexist fail";
         return false;
     }
     query.first();
@@ -45,7 +85,7 @@ bool MusicDatabase::isPlayListExist(const QString &id)
 bool MusicDatabase::isMusicMetaExist(const QString &hash)
 {
     QSqlQuery query;
-    query.prepare("SELECT COUNT(*) FROM mymusic where hash = :hash");
+    query.prepare("SELECT COUNT(*) FROM mymusic where hash = :hash;");
     query.bindValue(":hash", hash);
 
     if (!query.exec()) {
@@ -68,6 +108,7 @@ void MusicDatabase::addPlaylist(const PlaylistMeta &PlaylistMeta)
 
     if (!query.exec()) {
         qWarning() << query.lastError();
+        qDebug() << "add playlist fail";
         return;
     }
 
@@ -76,6 +117,7 @@ void MusicDatabase::addPlaylist(const PlaylistMeta &PlaylistMeta)
                     "playlist_id TEXT, sort_id INTEGER )")
                 .arg(PlaylistMeta.id))) {
         qWarning() << query.lastError();
+        qDebug() << "add playlist_% fail";
         return;
     }
     return;
@@ -113,30 +155,32 @@ void MusicDatabase::removeMusic(const MetaPtr meta, const PlaylistMeta &Playlist
 QList<MusicMeta> MusicDatabase::getAllMeta()
 {
     QList<MusicMeta> metaList;
-    QString execString = QString("SELECT hash, timestamp, title, author, album, mediatype, "
-                                 "offset, length, size, search_id, favourite FROM mymusic");
+    QString execString = QString("SELECT hash, timestamp, title, author, album, "
+                                 "offset, length, size, favourite, localpath FROM mymusic");
 
     QSqlQuery query;
     query.prepare(execString);
     if (!query.exec()) {
         qWarning() << query.lastError();
+        qDebug() << "get allmeta fail";
         return metaList;
     }
 
-    MusicMeta meta;
     while (query.next()) {
+        MusicMeta meta;
         meta.hash = query.value(0).toString();
         meta.timestamp = query.value(1).toInt();
         meta.title = query.value(2).toString();
         meta.author = query.value(3).toString();
         meta.album = query.value(4).toString();
-        meta.mediaType = query.value(5).toString();
-        meta.offset = query.value(6).toInt();
-        meta.length = query.value(7).toInt();
-        meta.size = query.value(8).toInt();
-        meta.favourite = query.value(9).toBool();
+        meta.offset = query.value(5).toInt();
+        meta.length = query.value(6).toInt();
+        meta.size = query.value(7).toInt();
+        meta.favourite = query.value(8).toBool();
+        meta.localPath = query.value(9).toString();
         metaList << meta;
     }
+
     return metaList;
 }
 
@@ -155,4 +199,42 @@ QStringList MusicDatabase::getAllPlaylist()
         list << query.value(0).toString();
     }
     return list;
+}
+
+void MusicDatabase::addMusicMeta(const MusicMeta meta)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO mymusic("
+                  "hash, timestamp, title, author,album,"
+                  "offset, length, size,"
+                  "favourite,localpath)"
+                  "VALUES ("
+                  ":hash, :timestamp, :title, :author,"
+                  ":album, :offset, :length,"
+                  ":size, :favourite, :localpath)");
+    query.bindValue(":hash", meta.hash);
+    query.bindValue(":timestamp", meta.timestamp);
+    query.bindValue(":title", meta.title);
+    query.bindValue(":author", meta.author);
+    query.bindValue(":album", meta.album);
+    query.bindValue(":offset", meta.offset);
+    query.bindValue(":length", meta.length);
+    query.bindValue(":size", meta.size);
+    query.bindValue(":favourite", meta.favourite);
+    query.bindValue(":localpath", meta.localPath);
+
+    if (!query.exec()) {
+        qCritical() << query.lastError();
+        qDebug() << "add musicmeta fail";
+        return;
+    }
+}
+
+void MusicDatabase::addMusicMetaList(const QList<MusicMeta> metaList)
+{
+    QSqlDatabase::database().transaction();
+    for (auto &meta : metaList) {
+        addMusicMeta(meta);
+    }
+    QSqlDatabase::database().commit();
 }
