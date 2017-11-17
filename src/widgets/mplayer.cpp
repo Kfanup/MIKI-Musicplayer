@@ -20,26 +20,13 @@ MPlayer::MPlayer(QWidget *parent)
 
     setLayout(mainvblayout);
 
-    myPlayer = new QMediaPlayer;
-    playList = new QMediaPlaylist;
     musicmeta = new MusicMeta;
     musiclibrary = new MusicLibrary;
 
-    connect(titlebar, &TitleBar::addMedia, this, &MPlayer::onAddSongClicked);
-    connect(titlebar, &TitleBar::addMediaDir, this, &MPlayer::onAddSongDirClicked);
-    connect(musictoolbar, &MusicToolBar::playModeBtnClicked, this, &MPlayer::onPlayModeBtnClicked);
-    connect(musictoolbar, &MusicToolBar::previousBtnClicked, this, &MPlayer::onPreviousBtnClicked);
-    connect(musictoolbar, &MusicToolBar::pauseBtnClicked, this, &MPlayer::onPausetnClicked);
-    connect(musictoolbar, &MusicToolBar::nextBtnClicked, this, &MPlayer::onNextBtnClicked);
+    QStringList pathList = playinglistwidget->initPlaylist();
+    player = new Player(pathList);
 
-    connect(nowPlayingWidget, &NowPlayingWidget::nowPlayingClicked, this,
-            &MPlayer::onNowPlayingClicked);
-    connect(nowPlayingWidget, &NowPlayingWidget::playingListClicked, this,
-            &MPlayer::onPlayingListClicked);
-    connect(playinglistwidget, &PlayListWidget::nowPlayingClicked, this,
-            &MPlayer::onNowPlayingClicked);
-    connect(playinglistwidget, &PlayListWidget::playingListClicked, this,
-            &MPlayer::onPlayingListClicked);
+    bind();
 }
 
 MPlayer::~MPlayer()
@@ -69,10 +56,9 @@ void MPlayer::setInitStyle()
 void MPlayer::setInitWidget()
 {
 
-    allSongList = MusicDatabase::instance()->getAllMeta();
     //播放界面与歌曲列表切换
     nowPlayingWidget = new NowPlayingWidget;
-    playinglistwidget = new PlayListWidget(allSongList);
+    playinglistwidget = new PlayListWidget;
     musicStacked = new QStackedWidget;
 
     musicStacked->addWidget(nowPlayingWidget);
@@ -166,4 +152,43 @@ void MPlayer::onPausetnClicked()
 
 void MPlayer::onNextBtnClicked()
 {
+}
+
+void MPlayer::bind()
+{
+    connect(titlebar, &TitleBar::addMedia, this, &MPlayer::onAddSongClicked);
+    connect(titlebar, &TitleBar::addMediaDir, this, &MPlayer::onAddSongDirClicked);
+    connect(musictoolbar, &MusicToolBar::playModeBtnClicked, this, &MPlayer::onPlayModeBtnClicked);
+    connect(musictoolbar, &MusicToolBar::previousBtnClicked, this, &MPlayer::onPreviousBtnClicked);
+    connect(musictoolbar, &MusicToolBar::pauseBtnClicked, this, &MPlayer::onPausetnClicked);
+    connect(musictoolbar, &MusicToolBar::nextBtnClicked, this, &MPlayer::onNextBtnClicked);
+
+    connect(nowPlayingWidget, &NowPlayingWidget::nowPlayingClicked, this,
+            &MPlayer::onNowPlayingClicked);
+    connect(nowPlayingWidget, &NowPlayingWidget::playingListClicked, this,
+            &MPlayer::onPlayingListClicked);
+    connect(playinglistwidget, &PlayListWidget::nowPlayingClicked, this,
+            &MPlayer::onNowPlayingClicked);
+    connect(playinglistwidget, &PlayListWidget::playingListClicked, this,
+            &MPlayer::onPlayingListClicked);
+
+    //    connect(playinglistwidget, &PlayListWidget::gettedSongList, player, &Player::setPlayList);
+    connect(playinglistwidget, &PlayListWidget::gettedPlayIndex, player, &Player::playMedia);
+
+    //播放进度条以及时间显示
+    connect(player, &Player::durationChanged, musicsliderwidget, &MusicSliderWidget::setTimeLabel);
+    connect(player, &Player::durationChanged, musicsliderwidget, &MusicSliderWidget::setPosition);
+    connect(player, &Player::positionChanged, musicsliderwidget,
+            &MusicSliderWidget::updatePosition);
+    connect(player, &Player::positionChanged, musicsliderwidget,
+            &MusicSliderWidget::updateTimeLabel);
+
+    //工具栏信号
+    connect(musictoolbar, &MusicToolBar::pauseBtnClicked, player, &Player::playOrPause);
+    connect(musictoolbar, &MusicToolBar::nextBtnClicked, player, &Player::nextMedia);
+    connect(musictoolbar, &MusicToolBar::previousBtnClicked, player, &Player::lastMedia);
+    connect(musictoolbar, &MusicToolBar::playModeBtnClicked, player, &Player::updatePlaymode);
+
+    connect(player, &Player::updatedState, musictoolbar, &MusicToolBar::updateStateIcon);
+    connect(player, &Player::updatedMode, musictoolbar, &MusicToolBar::updateModeIcon);
 }

@@ -17,7 +17,9 @@
 #include "backend/musicmeta.h"
 #include "backend/musicdatabase.h"
 #include "backend/musiclibrary.h"
+#include "backend/player.h"
 
+class MusicSliderWidget;
 class MusicToolBar;
 class TitleBar;
 class MPlayer : public QWidget
@@ -53,9 +55,13 @@ private:
     MusicDatabase *database = NULL;
     MusicMeta *musicmeta = NULL;
     MusicLibrary *musiclibrary = NULL;
+    Player *player = NULL;
 
 private:
     QMediaPlayer *myPlayer;
     QMediaPlaylist *playList;
     QList<MusicMeta> allSongList;
+
+private:
+    void bind();
 };

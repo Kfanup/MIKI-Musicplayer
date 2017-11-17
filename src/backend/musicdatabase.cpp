@@ -35,8 +35,10 @@ static bool createConnection()
     query.exec("CREATE TABLE IF NOT EXISTS playlist (id TEXT primary key not null, "
                "displayname VARCHAR(4096), "
                "sort_type INTEGER(32), sort_id INTEGER(32)) ");
-    query.exec("CREATE TABLE IF NOT EXISTS artist (id int primary key not null, "
+    query.exec("CREATE TABLE IF NOT EXISTS artist (id INTEGER primary key not null, "
                "name VARCHAR(20))");
+    query.exec("CREATE TABLE IF NOT EXISTS setup (id TEXT primary key not null, "
+               "playmode INTEGER(8) ,volume INTEGER(8))");
     return true;
 }
 
@@ -63,19 +65,32 @@ void MusicDatabase::initDatabase()
         addPlaylist(playlistmeta);
     }
 
+    initSetup();
     QSqlDatabase::database().commit();
+}
+
+void MusicDatabase::initSetup()
+{
+    QSqlQuery query;
+    query.prepare("INSERT OR IGNORE INTO setup (id, playmode, volume)"
+                  "VALUES (:id, :playmode, :volume)");
+    query.bindValue(":id", "DefaultUser");
+    query.bindValue(":playmode", 2);
+    query.bindValue(":volume", 30);
+
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        return;
+    }
 }
 
 bool MusicDatabase::isPlayListExist(const QString &id)
 {
     QSqlQuery query;
     QString sqlstring = QString("SELECT COUNT(*) FROM playlist where id = '%1'").arg(id);
-    //    query.prepare("SELECT COUNT(*) FROM playlist where id = :id;");
-    //    query.bindValue(":id", id);
 
     if (!query.exec(sqlstring)) {
         qWarning() << query.lastError();
-        qDebug() << "isplaylistexist fail";
         return false;
     }
     query.first();
@@ -152,6 +167,30 @@ void MusicDatabase::removeMusic(const MetaPtr meta, const PlaylistMeta &Playlist
     }
 }
 
+void MusicDatabase::updatePlaymode(qint8 index)
+{
+    QSqlQuery query;
+    query.prepare(QString("UPDATE setup SET playmode = %1 WHERE id = 'DefaultUser'").arg(index));
+
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        qDebug() << "update playmode fail";
+        return;
+    }
+}
+
+void MusicDatabase::updateVolume(qint8 volume)
+{
+    QSqlQuery query;
+    query.prepare(QString("UPDATE setup SET volume = %1 WHERE id = 'DefaultUser'").arg(volume));
+
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        qDebug() << "update volume fail";
+        return;
+    }
+}
+
 QList<MusicMeta> MusicDatabase::getAllMeta()
 {
     QList<MusicMeta> metaList;
@@ -199,6 +238,23 @@ QStringList MusicDatabase::getAllPlaylist()
         list << query.value(0).toString();
     }
     return list;
+}
+
+qint8 MusicDatabase::getDataFromSetup(QString key)
+{
+    QSqlQuery query;
+    query.prepare(QString("SELECT '%1' FROM setup WHERE id = 'DefaultUser'").arg(key));
+
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        qDebug() << "get setup data fail";
+        if ("playmode" == key) {
+            return 2;
+        } else
+            return 30;
+    }
+    query.first();
+    return query.value(0).toInt();
 }
 
 void MusicDatabase::addMusicMeta(const MusicMeta meta)

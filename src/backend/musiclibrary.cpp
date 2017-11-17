@@ -95,6 +95,9 @@ QString filePathToHash(const QString &filePath)
 
 QString length2String(const qint64 length)
 {
+    if (0 == length) {
+        return QString("00:00");
+    }
     auto len = length / 1000;
     int hour = len / 3600;
     QTime t(0, len % 3600 / 60, len % 60);

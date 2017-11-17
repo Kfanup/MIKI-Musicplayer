@@ -6,10 +6,12 @@
 
 using namespace MMusic;
 
-PlayListWidget::PlayListWidget(QList<MusicMeta> songList, QWidget *parent)
+PlayListWidget::PlayListWidget(QWidget *parent)
     : QWidget(parent)
 {
-    songCount = songList.count();
+    database = new MusicDatabase;
+    songs = database->getAllMeta();
+    songCount = songs.count();
     sizePolicy();
     setMinimumSize(450, 500);
     setStyleSheet("color:black");
@@ -21,23 +23,7 @@ PlayListWidget::PlayListWidget(QList<MusicMeta> songList, QWidget *parent)
     playListLabel->setAlignment(Qt::AlignLeft);
     playListLabel->setStyleSheet("font-size: 16px");
 
-    QStringList header;
-    header << "歌名"
-           << "歌手"
-           << "长度";
-
-    playListWidget = new QTableWidget;
-    playListWidget->setColumnCount(3);
-    playListWidget->setRowCount(songCount);
-    playListWidget->setHorizontalHeaderLabels(header);
-    playListWidget->setShowGrid(false);
-    playListWidget->verticalHeader()->setVisible(false);
-    playListWidget->horizontalHeader()->setStretchLastSection(true);
-    playListWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-    playListWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    playListWidget->horizontalHeader()->resizeSection(0, 180);
-    playListWidget->horizontalHeader()->resizeSection(1, 140);
-    playListWidget->horizontalHeader()->resizeSection(2, 80);
+    setPlayListStyle();
 
     playout = new QVBoxLayout;
     playout->addWidget(nowPlayingLabel);
@@ -47,9 +33,10 @@ PlayListWidget::PlayListWidget(QList<MusicMeta> songList, QWidget *parent)
 
     setLayout(playout);
 
-    initPlayList(songList);
     nowPlayingLabel->installEventFilter(this);
     playListLabel->installEventFilter(this);
+
+    connect(playListWidget, &QTableWidget::doubleClicked, this, &PlayListWidget::playByIndex);
 }
 
 /***
@@ -79,17 +66,48 @@ bool PlayListWidget::eventFilter(QObject *obj, QEvent *ev)
     }
 }
 
-void PlayListWidget::initPlayList(QList<MusicMeta> songs)
+QStringList PlayListWidget::initPlaylist()
 {
-    //将列表转为可迭代对象进行遍历
+    QStringList songList;
+    //--将列表转为可迭代对象进行遍历
     QList<MusicMeta>::iterator i;
     int index = 0;
     for (i = songs.begin(); i != songs.end(); ++i) {
         playListWidget->setItem(index, 0, new QTableWidgetItem(i->title));
         playListWidget->setItem(index, 1, new QTableWidgetItem(i->author));
-        qDebug() << i->author;
         playListWidget->setItem(index, 2, new QTableWidgetItem(length2String(i->length)));
-        qDebug() << length2String(i->length);
+        songList.append(i->localPath);
         ++index;
     }
+    qDebug() << "songList" << songList;
+    return songList;
+}
+
+void PlayListWidget::setPlayListStyle()
+{
+    QStringList header;
+    header << "歌名"
+           << "歌手"
+           << "长度";
+
+    playListWidget = new QTableWidget;
+    playListWidget->setColumnCount(3);
+    playListWidget->setRowCount(songCount);
+    playListWidget->setHorizontalHeaderLabels(header);
+    playListWidget->setShowGrid(false);
+    //    playListWidget->setFrameShape(QFrame::NoFrame);
+    playListWidget->verticalHeader()->setVisible(false);
+    playListWidget->horizontalHeader()->setVisible(false);
+    playListWidget->horizontalHeader()->setStretchLastSection(true);
+    playListWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    playListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    playListWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    playListWidget->horizontalHeader()->resizeSection(0, 180);
+    playListWidget->horizontalHeader()->resizeSection(1, 140);
+    playListWidget->horizontalHeader()->resizeSection(2, 80);
+}
+
+inline void PlayListWidget::playByIndex(const QModelIndex &index)
+{
+    emit gettedPlayIndex(index.row());
 }

@@ -12,18 +12,25 @@
 #include "backend/musicmeta.h"
 #include "util/music_global.h"
 
+class Player;
 class PlayListWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PlayListWidget(QList<MusicMeta> songList, QWidget *parent = 0);
+    explicit PlayListWidget(QWidget *parent = 0);
+    QStringList initPlaylist();
 
 signals:
     void nowPlayingClicked();
     void playingListClicked();
+    //    void gettedSongList(QStringList &list);
+    void gettedPlayIndex(int index);
+
+public slots:
+    void playByIndex(const QModelIndex &index);
 
 private:
-    void initPlayList(QList<MusicMeta> songs);
+    void setPlayListStyle();
 
 private:
     qint32 songCount;
@@ -32,6 +39,8 @@ private:
     QLabel *playListLabel;
     QTableWidget *playListWidget;
     QVBoxLayout *playout;
+    MusicDatabase *database = NULL;
+    QList<MusicMeta> songs;
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);

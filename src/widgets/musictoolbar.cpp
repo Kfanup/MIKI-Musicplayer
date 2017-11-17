@@ -23,7 +23,7 @@ MusicToolBar::MusicToolBar(QWidget *parent)
     playModeBtn->setIcon(QIcon(":/new/prefix1/res/random.ico"));
     nextBtn->setIcon(QIcon(":/new/prefix1/res/next.ico"));
 #else
-    pauseBtn->setIcon(QIcon(":/images/res/icon_unix/pause.png"));
+    pauseBtn->setIcon(QIcon(":/images/res/icon_unix/play.png"));
     previousBtn->setIcon(QIcon(":/images/res/icon_unix/previous.png"));
     playModeBtn->setIcon(QIcon(":/images/res/icon_unix/order.png"));
     nextBtn->setIcon(QIcon(":/images/res/icon_unix/next.png"));
@@ -48,6 +48,11 @@ MusicToolBar::MusicToolBar(QWidget *parent)
     mainlayout->addWidget(volumeSlider);
 
     setLayout(mainlayout);
+
+    connect(pauseBtn, &QToolButton::clicked, this, &MusicToolBar::pauseBtnClicked);
+    connect(nextBtn, &QToolButton::clicked, this, &MusicToolBar::nextBtnClicked);
+    connect(previousBtn, &QToolButton::clicked, this, &MusicToolBar::previousBtnClicked);
+    connect(playModeBtn, &QToolButton::clicked, this, &MusicToolBar::playModeBtnClicked);
 }
 
 inline void MusicToolBar::onPlayModeBtnClicked()
@@ -68,4 +73,35 @@ inline void MusicToolBar::onPauseBtnClicked()
 inline void MusicToolBar::onNextBtnClicked()
 {
     emit nextBtnClicked();
+}
+
+void MusicToolBar::updateModeIcon(qint8 index)
+{
+    switch (index) {
+    case 0:
+        playModeBtn->setIcon(QIcon(":/images/res/icon_unix/itemonce.png"));
+        break;
+    case 1:
+        playModeBtn->setIcon(QIcon(":/images/res/icon_unix/itemloop.png"));
+        break;
+    case 2:
+        playModeBtn->setIcon(QIcon(":/images/res/icon_unix/order.png"));
+        break;
+    case 3:
+        playModeBtn->setIcon(QIcon(":/images/res/icon_unix/loop.png"));
+        break;
+    case 4:
+        playModeBtn->setIcon(QIcon(":/images/res/icon_unix/random.png"));
+        break;
+    default:
+        break;
+    }
+}
+
+void MusicToolBar::updateStateIcon(bool state)
+{
+    if (state) {
+        pauseBtn->setIcon(QIcon(":/images/res/icon_unix/play.png"));
+    } else
+        pauseBtn->setIcon(QIcon(":/images/res/icon_unix/pause.png"));
 }
