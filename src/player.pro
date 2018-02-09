@@ -27,5 +27,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 INCLUDEPATH += backend/ util/ widgets/
 
+QMAKE_CXXFLAGS += -D__STDC_CONSTANT_MACROS
+
 RESOURCES += \
     resource.qrc

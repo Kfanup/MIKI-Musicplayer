@@ -38,7 +38,7 @@ static bool createConnection()
     query.exec("CREATE TABLE IF NOT EXISTS artist (id INTEGER primary key not null, "
                "name VARCHAR(20))");
     query.exec("CREATE TABLE IF NOT EXISTS setup (id TEXT primary key not null, "
-               "playmode INTEGER(8) ,volume INTEGER(8))");
+               "playmode INTEGER ,volume INTEGER)");
     return true;
 }
 
@@ -167,7 +167,7 @@ void MusicDatabase::removeMusic(const MetaPtr meta, const PlaylistMeta &Playlist
     }
 }
 
-void MusicDatabase::updatePlaymode(qint8 index)
+void MusicDatabase::updatePlaymode(qint32 index)
 {
     QSqlQuery query;
     query.prepare(QString("UPDATE setup SET playmode = %1 WHERE id = 'DefaultUser'").arg(index));
@@ -179,7 +179,7 @@ void MusicDatabase::updatePlaymode(qint8 index)
     }
 }
 
-void MusicDatabase::updateVolume(qint8 volume)
+void MusicDatabase::updateVolume(qint32 volume)
 {
     QSqlQuery query;
     query.prepare(QString("UPDATE setup SET volume = %1 WHERE id = 'DefaultUser'").arg(volume));
@@ -240,20 +240,33 @@ QStringList MusicDatabase::getAllPlaylist()
     return list;
 }
 
-qint8 MusicDatabase::getDataFromSetup(QString key)
+qint32 MusicDatabase::getPlaymodeFromSetup()
 {
     QSqlQuery query;
-    query.prepare(QString("SELECT '%1' FROM setup WHERE id = 'DefaultUser'").arg(key));
+    query.prepare(QString("SELECT playmode FROM setup WHERE id = 'DefaultUser'"));
 
     if (!query.exec()) {
         qWarning() << query.lastError();
-        qDebug() << "get setup data fail";
-        if ("playmode" == key) {
-            return 2;
-        } else
-            return 30;
+        qDebug() << "get playmode setup fail";
     }
-    query.first();
+    query.next();
+    qint32 index = query.value(0).toInt();
+    qDebug() << "getted playmode index is "<<index;
+    return query.value(0).toInt();
+}
+
+qint32 MusicDatabase::getVolumeFromSetup()
+{
+    QSqlQuery query;
+    query.prepare(QString("SELECT volume FROM setup WHERE id = 'DefaultUser'"));
+
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        qDebug() << "get volume setup fail";
+    }
+    query.next();
+    qint32 index = query.value(0).toInt();
+    qDebug() << "getted volume value is "<<index;
     return query.value(0).toInt();
 }
 

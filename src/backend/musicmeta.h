@@ -4,10 +4,10 @@
 #include <QString>
 #include <QFileInfo>
 #include <QSharedPointer>
-#include <taglib/tag.h>
-#include <taglib/fileref.h>
-#include <taglib/taglib.h>
-#include <taglib/tpropertymap.h>
+//#include <taglib/tag.h>
+//#include <taglib/fileref.h>
+//#include <taglib/taglib.h>
+//#include <taglib/tpropertymap.h>
 extern "C" {
 #include "libavformat/avformat.h"
 }

@@ -43,7 +43,7 @@ void Player::playMedia(int index)
 
 void Player::initPlaymode()
 {
-    auto mode = database->getDataFromSetup(QString("playmode"));
+    auto mode = database->getPlaymodeFromSetup();
     switch (mode) {
     case ITEMONCE:
         playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
@@ -94,9 +94,10 @@ void Player::lastMedia()
 void Player::updatePlaymode()
 {
     qDebug() << "accept mode change signal";
-    qint8 index = database->getDataFromSetup("playmode");
+    qint32 index = database->getPlaymodeFromSetup();
+    qDebug() << "current playmode index is " << index;
     if (index < 4) {
-        index += index;
+        index += 1;
     } else {
         index = 0;
     }

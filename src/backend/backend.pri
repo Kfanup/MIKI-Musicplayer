@@ -4,7 +4,8 @@ HEADERS  += \
     $$PWD/musicdatabase.h \
     $$PWD/playlistmeta.h \
     $$PWD/playlist.h \
-    $$PWD/player.h
+    $$PWD/player.h \
+    $$PWD/mysqlquerymodel.h
 
 
 SOURCES  += \
@@ -12,8 +13,9 @@ SOURCES  += \
     $$PWD/musiclibrary.cpp \
     $$PWD/musicdatabase.cpp \
     $$PWD/playlist.cpp \ 
-    $$PWD/player.cpp
+    $$PWD/player.cpp \
+    $$PWD/mysqlquerymodel.cpp
 
 #INCLUDEPATH += /usr/local/include/
 
-LIBS += -lavcodec -lavformat -lswscale -lavutil
+LIBS += -lavcodec -lswscale -lavutil -lz -lavformat

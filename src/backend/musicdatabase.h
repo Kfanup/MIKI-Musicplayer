@@ -20,7 +20,8 @@ public:
 
     QList<MusicMeta> getAllMeta();
     QStringList getAllPlaylist();
-    qint8 getDataFromSetup(QString key);
+    qint32 getPlaymodeFromSetup();
+    qint32 getVolumeFromSetup();
 
 signals:
 
@@ -30,8 +31,8 @@ public slots:
     void addMusicMetaList(const QList<MusicMeta> metaList);
     void removePlaylist(const PlaylistMeta &PlaylistMeta);
     void removeMusic(const MetaPtr meta, const PlaylistMeta &PlaylistMeta);
-    void updatePlaymode(qint8 index);
-    void updateVolume(qint8 volume);
+    void updatePlaymode(qint32 index);
+    void updateVolume(qint32 volume);
 
 private:
 };

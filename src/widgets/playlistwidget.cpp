@@ -1,7 +1,9 @@
 #include "playlistwidget.h"
+#include <QDir>
 #include <QEvent>
 #include <QTableWidget>
 #include <QHeaderView>
+#include <QStandardPaths>
 #include <QDebug>
 
 using namespace MMusic;
@@ -9,11 +11,30 @@ using namespace MMusic;
 PlayListWidget::PlayListWidget(QWidget *parent)
     : QWidget(parent)
 {
-    database = new MusicDatabase;
-    songs = database->getAllMeta();
-    songCount = songs.count();
+    model = new Mysqlquerymodel;
+    model->refresh();
+
+    QTableView *view = new QTableView;
+    view->setModel(model);
+    view->setSelectionMode(QAbstractItemView::SingleSelection);
+    view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    view->resizeColumnsToContents();
+    view->sortByColumn(0, Qt::AscendingOrder);
+    view->verticalHeader()->hide();
+//    view->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    view->setAlternatingRowColors(true);
+    view->setShowGrid(false);
+    view->setColumnWidth(0,340);
+    view->setColumnWidth(1,100);
+
+
+    QHeaderView *header = view->horizontalHeader();
+    header->setStretchLastSection(true);
+//    header->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+
     sizePolicy();
-    setMinimumSize(450, 500);
+//    setMinimumSize(450, 500);
     setStyleSheet("color:black");
 
     nowPlayingLabel = new QLabel(tr("正在播放"));
@@ -23,12 +44,10 @@ PlayListWidget::PlayListWidget(QWidget *parent)
     playListLabel->setAlignment(Qt::AlignLeft);
     playListLabel->setStyleSheet("font-size: 16px");
 
-    setPlayListStyle();
-
     playout = new QVBoxLayout;
     playout->addWidget(nowPlayingLabel);
     playout->addWidget(playListLabel);
-    playout->addWidget(playListWidget);
+    playout->addWidget(view);
     //    playout->addStretch(1);
 
     setLayout(playout);
@@ -36,7 +55,7 @@ PlayListWidget::PlayListWidget(QWidget *parent)
     nowPlayingLabel->installEventFilter(this);
     playListLabel->installEventFilter(this);
 
-    connect(playListWidget, &QTableWidget::doubleClicked, this, &PlayListWidget::playByIndex);
+    connect(view, &QTableView::doubleClicked, this, &PlayListWidget::playByIndex);
 }
 
 /***
@@ -66,16 +85,16 @@ bool PlayListWidget::eventFilter(QObject *obj, QEvent *ev)
     }
 }
 
-QStringList PlayListWidget::initPlaylist()
+QStringList PlayListWidget::getPlaylistFromDB()
 {
+    MusicDatabase *database = new MusicDatabase;
+    QList<MusicMeta> songs;
+    songs = database->getAllMeta();
     QStringList songList;
     //--将列表转为可迭代对象进行遍历
     QList<MusicMeta>::iterator i;
     int index = 0;
     for (i = songs.begin(); i != songs.end(); ++i) {
-        playListWidget->setItem(index, 0, new QTableWidgetItem(i->title));
-        playListWidget->setItem(index, 1, new QTableWidgetItem(i->author));
-        playListWidget->setItem(index, 2, new QTableWidgetItem(length2String(i->length)));
         songList.append(i->localPath);
         ++index;
     }
@@ -83,31 +102,12 @@ QStringList PlayListWidget::initPlaylist()
     return songList;
 }
 
-void PlayListWidget::setPlayListStyle()
-{
-    QStringList header;
-    header << "歌名"
-           << "歌手"
-           << "长度";
-
-    playListWidget = new QTableWidget;
-    playListWidget->setColumnCount(3);
-    playListWidget->setRowCount(songCount);
-    playListWidget->setHorizontalHeaderLabels(header);
-    playListWidget->setShowGrid(false);
-    //    playListWidget->setFrameShape(QFrame::NoFrame);
-    playListWidget->verticalHeader()->setVisible(false);
-    playListWidget->horizontalHeader()->setVisible(false);
-    playListWidget->horizontalHeader()->setStretchLastSection(true);
-    playListWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-    playListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-    playListWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    playListWidget->horizontalHeader()->resizeSection(0, 180);
-    playListWidget->horizontalHeader()->resizeSection(1, 140);
-    playListWidget->horizontalHeader()->resizeSection(2, 80);
-}
-
 inline void PlayListWidget::playByIndex(const QModelIndex &index)
 {
     emit gettedPlayIndex(index.row());
+}
+
+void PlayListWidget::updatePlaylist()
+{
+    model->refresh();
 }

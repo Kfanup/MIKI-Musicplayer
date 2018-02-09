@@ -28,7 +28,7 @@ signals:
     void durationChanged(qint64 d);
     // False for pause,and True for play
     void updatedState(bool state);
-    void updatedMode(qint8 index);
+    void updatedMode(qint32 index);
 
 public slots:
     void playOrPause();

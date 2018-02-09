@@ -23,7 +23,7 @@ MPlayer::MPlayer(QWidget *parent)
     musicmeta = new MusicMeta;
     musiclibrary = new MusicLibrary;
 
-    QStringList pathList = playinglistwidget->initPlaylist();
+    QStringList pathList = playinglistwidget->getPlaylistFromDB();
     player = new Player(pathList);
 
     bind();
@@ -191,4 +191,8 @@ void MPlayer::bind()
 
     connect(player, &Player::updatedState, musictoolbar, &MusicToolBar::updateStateIcon);
     connect(player, &Player::updatedMode, musictoolbar, &MusicToolBar::updateModeIcon);
+
+    //model update
+    connect(titlebar, &TitleBar::addMedia, playinglistwidget, &PlayListWidget::updatePlaylist);
+    connect(titlebar, &TitleBar::addMediaDir, playinglistwidget, &PlayListWidget::updatePlaylist);
 }

@@ -10,6 +10,7 @@
 #include <QVBoxLayout>
 #include "backend/musicdatabase.h"
 #include "backend/musicmeta.h"
+#include "backend/mysqlquerymodel.h"
 #include "util/music_global.h"
 
 class Player;
@@ -18,7 +19,7 @@ class PlayListWidget : public QWidget
     Q_OBJECT
 public:
     explicit PlayListWidget(QWidget *parent = 0);
-    QStringList initPlaylist();
+    QStringList getPlaylistFromDB();
 
 signals:
     void nowPlayingClicked();
@@ -28,19 +29,20 @@ signals:
 
 public slots:
     void playByIndex(const QModelIndex &index);
+    void updatePlaylist();
 
-private:
-    void setPlayListStyle();
+private slots:
+
 
 private:
     qint32 songCount;
     //    QList<QMediaContent *> songList;
     QLabel *nowPlayingLabel;
     QLabel *playListLabel;
-    QTableWidget *playListWidget;
+    Mysqlquerymodel *model;
     QVBoxLayout *playout;
-    MusicDatabase *database = NULL;
-    QList<MusicMeta> songs;
+//    MusicDatabase *database = NULL;
+//    QList<MusicMeta> songs;
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev);

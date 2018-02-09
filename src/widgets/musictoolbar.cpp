@@ -75,8 +75,9 @@ inline void MusicToolBar::onNextBtnClicked()
     emit nextBtnClicked();
 }
 
-void MusicToolBar::updateModeIcon(qint8 index)
+void MusicToolBar::updateModeIcon(qint32 index)
 {
+    qDebug()<< "playmode:" << index;
     switch (index) {
     case 0:
         playModeBtn->setIcon(QIcon(":/images/res/icon_unix/itemonce.png"));

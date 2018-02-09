@@ -16,11 +16,11 @@ public:
     void onPreviousBtnClicked();
     void onPauseBtnClicked();
     void onNextBtnClicked();
-    void setPlayModeIcon(qint8 index);
+    void setPlayModeIcon(qint32 index);
     void setPauseBtnIcon(bool status);
 
 public slots:
-    void updateModeIcon(qint8 index);
+    void updateModeIcon(qint32 index);
     void updateStateIcon(bool state);
 
 signals:
