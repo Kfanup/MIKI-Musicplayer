@@ -14,7 +14,7 @@ PlayListWidget::PlayListWidget(QWidget *parent)
     model = new Mysqlquerymodel;
     model->refresh();
 
-    QTableView *view = new QTableView;
+    QTableView *view = new QTableView(this);
     view->setModel(model);
     view->setSelectionMode(QAbstractItemView::SingleSelection);
     view->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -58,6 +58,11 @@ PlayListWidget::PlayListWidget(QWidget *parent)
     connect(view, &QTableView::doubleClicked, this, &PlayListWidget::playByIndex);
 }
 
+PlayListWidget::~PlayListWidget()
+{
+    delete model;
+}
+
 /***
  * @brief 事件过滤器
  * @param obj
@@ -85,7 +90,7 @@ bool PlayListWidget::eventFilter(QObject *obj, QEvent *ev)
     }
 }
 
-QStringList PlayListWidget::getPlaylistFromDB()
+QStringList PlayListWidget::updatePlaylistFromDB()
 {
     MusicDatabase *database = new MusicDatabase;
     QList<MusicMeta> songs;
@@ -99,6 +104,7 @@ QStringList PlayListWidget::getPlaylistFromDB()
         ++index;
     }
     qDebug() << "songList" << songList;
+    database->deleteLater();
     return songList;
 }
 

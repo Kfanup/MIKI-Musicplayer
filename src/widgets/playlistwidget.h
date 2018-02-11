@@ -19,7 +19,8 @@ class PlayListWidget : public QWidget
     Q_OBJECT
 public:
     explicit PlayListWidget(QWidget *parent = 0);
-    QStringList getPlaylistFromDB();
+    ~PlayListWidget();
+    QStringList updatePlaylistFromDB();
 
 signals:
     void nowPlayingClicked();

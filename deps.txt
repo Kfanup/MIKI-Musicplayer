@@ -1,0 +1,1 @@
+Ubuntu xenial : ffmpeg libavformat-dev libswscale-dev libgl1-mesa-dev

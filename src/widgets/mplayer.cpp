@@ -23,7 +23,7 @@ MPlayer::MPlayer(QWidget *parent)
     musicmeta = new MusicMeta;
     musiclibrary = new MusicLibrary;
 
-    QStringList pathList = playinglistwidget->getPlaylistFromDB();
+    QStringList pathList = playinglistwidget->updatePlaylistFromDB();
     player = new Player(pathList);
 
     bind();
@@ -122,20 +122,23 @@ inline void MPlayer::onAddSongClicked()
             database->addMusicMeta(meta);
         }
     }
+    emit toUpdatePlaylist(songList);
 }
 
 inline void MPlayer::onAddSongDirClicked()
 {
     QFileInfoList songList = musicfilemanager->addMediaDir();
+    QStringList list;
 
     for (auto &song : songList) {
         auto meta = musicmeta->fromLocalfile(song);
-
+        list.append(song.absoluteFilePath());
         if (!database->isMusicMetaExist(meta.hash)) {
             qDebug() << "start to insert media";
             database->addMusicMeta(meta);
         }
     }
+    emit toUpdatePlaylist(list);
 }
 
 void MPlayer::onPlayModeBtnClicked()
@@ -195,4 +198,7 @@ void MPlayer::bind()
     //model update
     connect(titlebar, &TitleBar::addMedia, playinglistwidget, &PlayListWidget::updatePlaylist);
     connect(titlebar, &TitleBar::addMediaDir, playinglistwidget, &PlayListWidget::updatePlaylist);
+
+    //update playlist(import music)
+    connect(this, &MPlayer::toUpdatePlaylist, player, &Player::setPlaylist);
 }

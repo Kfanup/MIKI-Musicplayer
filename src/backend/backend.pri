@@ -18,4 +18,4 @@ SOURCES  += \
 
 #INCLUDEPATH += /usr/local/include/
 
-LIBS += -lavcodec -lswscale -lavutil -lz -lavformat
+LIBS += -lavcodec -lswscale -lavutil -lavformat

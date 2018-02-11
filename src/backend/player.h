@@ -18,7 +18,7 @@ class Player : public QObject
 public:
     Player(QStringList &pathList, QObject *parent = 0);
     ~Player();
-    void setPlaylist(QStringList &list);
+    void setPlaylist(QStringList list);
     void playMedia(int index);
     void initPlaymode();
     enum playmode { ITEMONCE = 0, ITEMLOOP, SEQUENTIAL, LOOP, RANDOM };
@@ -35,6 +35,7 @@ public slots:
     void lastMedia();
     void nextMedia();
     void updatePlaymode();
+//    void updatePlaylist(QStringList songlist);
 
 private:
     QMediaPlayer *qPlayer = NULL;

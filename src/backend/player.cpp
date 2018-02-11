@@ -10,7 +10,9 @@ Player::Player(QStringList &pathList, QObject *parent)
     database = new MusicDatabase;
     timer = new QTimer;
 
+    initPlaymode();
     setPlaylist(pathList);
+    qPlayer->setPlaylist(playlist);
 
     connect(toolbar, &MusicToolBar::pauseBtnClicked, this, &Player::playOrPause);
     connect(toolbar, &MusicToolBar::nextBtnClicked, this, &Player::nextMedia);
@@ -125,7 +127,12 @@ void Player::updatePlaymode()
     emit updatedMode(index);
 }
 
-void Player::setPlaylist(QStringList &list)
+//void Player::updatePlaylist(QStringList songlist)
+//{
+//    playlist->
+//}
+
+void Player::setPlaylist(QStringList list)
 {
     //    Q_ASSERT(!list.isEmpty());
     QListIterator<QString> path(list);
@@ -134,6 +141,4 @@ void Player::setPlaylist(QStringList &list)
         playlist->addMedia(QUrl::fromLocalFile(song));
     }
 
-    initPlaymode();
-    qPlayer->setPlaylist(playlist);
 }

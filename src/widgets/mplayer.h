@@ -40,6 +40,10 @@ public:
     void onNowPlayingClicked();
     void onPlayingListClicked();
 
+
+signals:
+    void toUpdatePlaylist(QStringList);
+
 private:
     QHBoxLayout *tophblayout;
     QVBoxLayout *btmvblayout;
