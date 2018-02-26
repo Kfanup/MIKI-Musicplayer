@@ -1,5 +1,4 @@
 #include "playlistwidget.h"
-#include <QDir>
 #include <QEvent>
 #include <QTableWidget>
 #include <QHeaderView>
@@ -13,6 +12,7 @@ PlayListWidget::PlayListWidget(QWidget *parent)
 {
     model = new Mysqlquerymodel;
     model->refresh();
+    filemanager = new MusicFileManager(this);
 
     QTableView *view = new QTableView(this);
     view->setModel(model);
@@ -37,14 +37,14 @@ PlayListWidget::PlayListWidget(QWidget *parent)
 //    setMinimumSize(450, 500);
     setStyleSheet("color:black");
 
-    nowPlayingLabel = new QLabel(tr("正在播放"));
+    nowPlayingLabel = new QLabel(tr("正在播放"),this);
     nowPlayingLabel->setAlignment(Qt::AlignLeft);
     nowPlayingLabel->setStyleSheet("font-size: 16px");
-    playListLabel = new QLabel(tr("播放列表"));
+    playListLabel = new QLabel(tr("播放列表"),this);
     playListLabel->setAlignment(Qt::AlignLeft);
     playListLabel->setStyleSheet("font-size: 16px");
 
-    playout = new QVBoxLayout;
+    playout = new QVBoxLayout(this);
     playout->addWidget(nowPlayingLabel);
     playout->addWidget(playListLabel);
     playout->addWidget(view);
@@ -61,6 +61,8 @@ PlayListWidget::PlayListWidget(QWidget *parent)
 PlayListWidget::~PlayListWidget()
 {
     delete model;
+    delete nowPlayingLabel;
+    delete playListLabel;
 }
 
 /***
@@ -90,7 +92,7 @@ bool PlayListWidget::eventFilter(QObject *obj, QEvent *ev)
     }
 }
 
-QStringList PlayListWidget::updatePlaylistFromDB()
+QStringList PlayListWidget::getPlaylistFromDB()
 {
     MusicDatabase *database = new MusicDatabase;
     QList<MusicMeta> songs;

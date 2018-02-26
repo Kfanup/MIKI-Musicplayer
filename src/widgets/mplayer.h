@@ -39,6 +39,7 @@ public:
     void onNextBtnClicked();
     void onNowPlayingClicked();
     void onPlayingListClicked();
+    QString getPlaylistFromLocal();
 
 
 signals:

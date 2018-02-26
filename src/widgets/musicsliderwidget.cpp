@@ -7,21 +7,21 @@ MusicSliderWidget::MusicSliderWidget(QWidget *parent)
     : QWidget(parent)
 {
     setStyleSheet("color:white");
-    musicSlider = new QSlider(Qt::Horizontal);
+    musicSlider = new QSlider(Qt::Horizontal,this);
     musicSlider->setMinimum(0);
     musicSlider->setValue(0);
     musicSlider->setMinimumSize(400, 12);
 
-    nowTimeLabel = new QLabel(QString("00:00"));
+    nowTimeLabel = new QLabel(QString("00:00"),this);
     nowTimeLabel->setStyleSheet("color:black");
     nowTimeLabel->sizePolicy();
     nowTimeLabel->setMaximumSize(40, 12);
-    allTimeLabel = new QLabel(QString("00:00"));
+    allTimeLabel = new QLabel(QString("00:00"),this);
     allTimeLabel->setStyleSheet("color:black");
     allTimeLabel->sizePolicy();
     allTimeLabel->setMaximumSize(40, 12);
 
-    QHBoxLayout *musiclayout = new QHBoxLayout;
+    QHBoxLayout *musiclayout = new QHBoxLayout(this);
     musiclayout->setAlignment(Qt::AlignCenter);
     musiclayout->addStretch(10);
     musiclayout->addWidget(nowTimeLabel);

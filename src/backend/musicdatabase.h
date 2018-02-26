@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "util/music_global.h"
+#include "util/musicfilemanager.h"
 #include "musicmeta.h"
 #include "playlistmeta.h"
 

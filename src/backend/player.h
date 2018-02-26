@@ -16,9 +16,10 @@ class Player : public QObject
 {
     Q_OBJECT
 public:
-    Player(QStringList &pathList, QObject *parent = 0);
+    Player(QString &localPath, QStringList &pathList, QObject *parent = 0);
     ~Player();
-    void setPlaylist(QStringList list);
+    void setPlaylist(QString localPath, QStringList list);
+    void updatePlaylist(QStringList list);
     void playMedia(int index);
     void initPlaymode();
     enum playmode { ITEMONCE = 0, ITEMLOOP, SEQUENTIAL, LOOP, RANDOM };
@@ -44,6 +45,7 @@ private:
     MusicToolBar *toolbar = NULL;
     MusicDatabase *database = NULL;
     QTimer *timer;
+    QString localPlaylist;
 
 private:
 };

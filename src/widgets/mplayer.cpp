@@ -7,8 +7,8 @@ MPlayer::MPlayer(QWidget *parent)
     setInitStyle();
     setInitWidget();
 
-    titlebar = new TitleBar(this);
-    musicfilemanager = new MusicFileManager(this);
+    titlebar = new TitleBar;
+    musicfilemanager = new MusicFileManager;
 
     mainvblayout = new QVBoxLayout;
     mainvblayout->addWidget(titlebar);
@@ -23,14 +23,16 @@ MPlayer::MPlayer(QWidget *parent)
     musicmeta = new MusicMeta;
     musiclibrary = new MusicLibrary;
 
-    QStringList pathList = playinglistwidget->updatePlaylistFromDB();
-    player = new Player(pathList);
+    QString localPlaylist = getPlaylistFromLocal();
+    QStringList pathList= playinglistwidget->getPlaylistFromDB();
+    player = new Player(localPlaylist, pathList, this);
 
     bind();
 }
 
 MPlayer::~MPlayer()
 {
+    delete musicmeta;
 }
 
 /***
@@ -108,6 +110,22 @@ inline void MPlayer::onPlayingListClicked()
     } else {
         musicStacked->setCurrentIndex(0);
     }
+}
+
+QString MPlayer::getPlaylistFromLocal()
+{
+
+    QString cacheStr = musicfilemanager->getCachePath();
+    QString cachePath = cacheStr + QString("/myplaylist.txt");
+    QFile file(cachePath);
+    if (!file.exists())
+    {
+       if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+       {
+           file.close();
+       }
+    }
+    return cachePath;
 }
 
 inline void MPlayer::onAddSongClicked()
@@ -200,5 +218,5 @@ void MPlayer::bind()
     connect(titlebar, &TitleBar::addMediaDir, playinglistwidget, &PlayListWidget::updatePlaylist);
 
     //update playlist(import music)
-    connect(this, &MPlayer::toUpdatePlaylist, player, &Player::setPlaylist);
+    connect(this, &MPlayer::toUpdatePlaylist, player, &Player::updatePlaylist);
 }

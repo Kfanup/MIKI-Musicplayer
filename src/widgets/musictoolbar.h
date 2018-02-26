@@ -11,6 +11,7 @@ class MusicToolBar : public QWidget
     Q_OBJECT
 public:
     explicit MusicToolBar(QWidget *parent = 0);
+    ~MusicToolBar();
     static QSlider *volumeSlider;
     void onPlayModeBtnClicked();
     void onPreviousBtnClicked();

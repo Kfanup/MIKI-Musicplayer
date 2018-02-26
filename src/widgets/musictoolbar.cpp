@@ -6,10 +6,10 @@ MusicToolBar::MusicToolBar(QWidget *parent)
     : QWidget(parent)
 {
     setStyleSheet("color:white");
-    playModeBtn = new QToolButton;
-    previousBtn = new QToolButton;
-    pauseBtn = new QToolButton;
-    nextBtn = new QToolButton;
+    playModeBtn = new QToolButton(this);
+    previousBtn = new QToolButton(this);
+    pauseBtn = new QToolButton(this);
+    nextBtn = new QToolButton(this);
 
     playModeBtn->sizePolicy();
     previousBtn->sizePolicy();
@@ -29,13 +29,13 @@ MusicToolBar::MusicToolBar(QWidget *parent)
     nextBtn->setIcon(QIcon(":/images/res/icon_unix/next.png"));
 #endif
 
-    QSlider *volumeSlider = new QSlider(Qt::Horizontal);
+    QSlider *volumeSlider = new QSlider(Qt::Horizontal,this);
     volumeSlider->setFixedSize(100, 12);
     volumeSlider->setMaximum(100);
     volumeSlider->setMinimum(0);
     volumeSlider->setValue(30);
 
-    QHBoxLayout *mainlayout = new QHBoxLayout;
+    QHBoxLayout *mainlayout = new QHBoxLayout(this);
     mainlayout->setAlignment(Qt::AlignCenter);
     mainlayout->addWidget(playModeBtn);
     mainlayout->setSpacing(15);
@@ -53,6 +53,10 @@ MusicToolBar::MusicToolBar(QWidget *parent)
     connect(nextBtn, &QToolButton::clicked, this, &MusicToolBar::nextBtnClicked);
     connect(previousBtn, &QToolButton::clicked, this, &MusicToolBar::previousBtnClicked);
     connect(playModeBtn, &QToolButton::clicked, this, &MusicToolBar::playModeBtnClicked);
+}
+
+MusicToolBar::~MusicToolBar()
+{
 }
 
 inline void MusicToolBar::onPlayModeBtnClicked()

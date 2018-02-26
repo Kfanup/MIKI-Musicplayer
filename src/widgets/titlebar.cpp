@@ -52,14 +52,14 @@ TitleBar::TitleBar(QWidget *parent)
     pCloseBtn->setIcon(QIcon(":/images/res/icon_unix/close.png"));
 
     QMenu *pMenu = new QMenu(this);
-    QAction *addMediaAct = new QAction(QString("添加音乐文件"));
-    QAction *addMediaDirAct = new QAction(QString("添加音乐文件夹"));
+    QAction *addMediaAct = new QAction(QString("添加音乐文件"),this);
+    QAction *addMediaDirAct = new QAction(QString("添加音乐文件夹"),this);
     pMenu->addAction(addMediaAct);
     pMenu->addAction(addMediaDirAct);
     pMenuBtn->setMenu(pMenu);
     pMenuBtn->setStyleSheet("QPushButton::menu-indicator{image:none;}"); //取消菜单的三角下拉图标
 
-    QHBoxLayout *playout = new QHBoxLayout;
+    QHBoxLayout *playout = new QHBoxLayout(this);
     playout->addWidget(pIconLabel);
     playout->addSpacing(10);
     playout->addWidget(pTitleLabel);

@@ -1,7 +1,7 @@
 #include "player.h"
 
 using namespace MMusic;
-Player::Player(QStringList &pathList, QObject *parent)
+Player::Player(QString &localPath, QStringList &pathList, QObject *parent)
     : QObject(parent)
 {
     playlist = new QMediaPlaylist;
@@ -9,9 +9,10 @@ Player::Player(QStringList &pathList, QObject *parent)
     toolbar = new MusicToolBar;
     database = new MusicDatabase;
     timer = new QTimer;
+    this->localPlaylist = localPath;
 
     initPlaymode();
-    setPlaylist(pathList);
+    setPlaylist(localPath,pathList);
     qPlayer->setPlaylist(playlist);
 
     connect(toolbar, &MusicToolBar::pauseBtnClicked, this, &Player::playOrPause);
@@ -132,13 +133,26 @@ void Player::updatePlaymode()
 //    playlist->
 //}
 
-void Player::setPlaylist(QStringList list)
+void Player::setPlaylist(QString localPath, QStringList list)
 {
     //    Q_ASSERT(!list.isEmpty());
+    playlist->load(QUrl::fromLocalFile(localPath),"m3u8");
+    if (playlist->isEmpty()){
+        QListIterator<QString> path(list);
+        while (path.hasNext()) {
+            auto song = path.next();
+            playlist->addMedia(QUrl::fromLocalFile(song));
+        }
+        playlist->save(QUrl::fromLocalFile(localPath),"m3u8");
+    }
+}
+
+void Player::updatePlaylist(QStringList list)
+{
     QListIterator<QString> path(list);
     while (path.hasNext()) {
         auto song = path.next();
         playlist->addMedia(QUrl::fromLocalFile(song));
     }
-
+    playlist->save(QUrl::fromLocalFile(localPlaylist),"m3u8");
 }

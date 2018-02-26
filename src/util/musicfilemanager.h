@@ -2,6 +2,7 @@
 
 #include <QDir>
 #include <QWidget>
+#include <QStandardPaths>
 #include <QFileInfoList>
 #include <QFileDialog>
 #include "musicmeta.h"
@@ -12,6 +13,7 @@ class MusicFileManager : public QWidget
 public:
     explicit MusicFileManager(QWidget *parent = nullptr);
     QFileInfoList getMusicFiles(QString path);
+    QString getCachePath() const ;
     //    QStringList addMusicFiles(QStringList paths);
     QFileInfoList addMediaDir();
     QStringList addMedia();

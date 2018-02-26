@@ -10,32 +10,32 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
 
     QString strHeightText = "<p style=\"line-height:%1%\">%2<p>";
     songName = strHeightText.arg(300).arg(songName);
-    nowPlayingLabel = new QLabel(tr("正在播放"));
+    nowPlayingLabel = new QLabel(tr("正在播放"),this);
     nowPlayingLabel->setAlignment(Qt::AlignLeft);
     nowPlayingLabel->setStyleSheet("font-size: 16px");
-    playListLabel = new QLabel(tr("播放列表"));
+    playListLabel = new QLabel(tr("播放列表"),this);
     playListLabel->setAlignment(Qt::AlignLeft);
     playListLabel->setStyleSheet("font-size: 16px");
 
     QFont mfont1("Microsoft YaHei", 18, 75);
     QFont mfont2("Microsoft YaHei", 14, 50);
 
-    nameLable = new QLabel;
+    nameLable = new QLabel(this);
     nameLable->setAlignment(Qt::AlignLeft);
     nameLable->setText(songName);
     nameLable->setFont(mfont1);
 
-    singerLable = new QLabel;
+    singerLable = new QLabel(this);
     singerLable->setAlignment(Qt::AlignLeft);
     singerLable->setText(singer);
     singerLable->setFont(mfont2);
 
-    detailsLable = new QLabel;
+    detailsLable = new QLabel(this);
     detailsLable->setAlignment(Qt::AlignLeft);
     detailsLable->setText(more);
     detailsLable->setFont(mfont2);
 
-    playout = new QVBoxLayout;
+    playout = new QVBoxLayout(this);
     playout->addWidget(nowPlayingLabel);
     playout->addSpacing(5);
     playout->addWidget(nameLable);

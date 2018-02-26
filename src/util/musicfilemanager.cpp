@@ -21,6 +21,17 @@ QFileInfoList MusicFileManager::getMusicFiles(QString path)
     return file_list;
 }
 
+QString MusicFileManager::getCachePath() const
+{
+    QDir dir(QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first());
+    if (!dir.exists()) {
+        dir.mkpath(QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation).first());
+        dir.setPath(
+            QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation).first());
+    }
+    return dir.absolutePath();
+}
+
 // QStringList MusicFileManager::addMusicFiles(QStringList paths)
 //{
 //    QFileInfoList file_list;

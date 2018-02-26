@@ -1,20 +1,14 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QDir>
-#include <QStandardPaths>
 #include <QDebug>
 #include "musicdatabase.h"
 
 static bool createConnection()
 {
-    QDir dir(QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first());
-    if (!dir.exists()) {
-        dir.mkpath(QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation).first());
-        dir.setPath(
-            QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation).first());
-    }
-    QString cachePath = dir.absolutePath() + QString("/mikimusic.sqlite");
+    MusicFileManager *filemanager = new MusicFileManager;
+    QString cache = filemanager->getCachePath();
+    QString cachePath = cache + QString("/mikimusic.sqlite");
     qDebug() << cachePath;
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(cachePath);
@@ -39,6 +33,7 @@ static bool createConnection()
                "name VARCHAR(20))");
     query.exec("CREATE TABLE IF NOT EXISTS setup (id TEXT primary key not null, "
                "playmode INTEGER ,volume INTEGER)");
+    filemanager->deleteLater();
     return true;
 }
 

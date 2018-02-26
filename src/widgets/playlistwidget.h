@@ -20,7 +20,7 @@ class PlayListWidget : public QWidget
 public:
     explicit PlayListWidget(QWidget *parent = 0);
     ~PlayListWidget();
-    QStringList updatePlaylistFromDB();
+    QStringList getPlaylistFromDB();
 
 signals:
     void nowPlayingClicked();
@@ -38,10 +38,11 @@ private slots:
 private:
     qint32 songCount;
     //    QList<QMediaContent *> songList;
-    QLabel *nowPlayingLabel;
-    QLabel *playListLabel;
-    Mysqlquerymodel *model;
-    QVBoxLayout *playout;
+    QLabel *nowPlayingLabel = NULL;
+    QLabel *playListLabel = NULL;
+    Mysqlquerymodel *model = NULL;
+    QVBoxLayout *playout = NULL;
+    MusicFileManager *filemanager = NULL;
 //    MusicDatabase *database = NULL;
 //    QList<MusicMeta> songs;
 
