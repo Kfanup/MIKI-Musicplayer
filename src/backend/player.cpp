@@ -1,4 +1,5 @@
 #include "player.h"
+#include <QMediaMetaData>
 
 using namespace MMusic;
 Player::Player(QString &localPath, QStringList &pathList, QObject *parent)
@@ -19,6 +20,7 @@ Player::Player(QString &localPath, QStringList &pathList, QObject *parent)
     connect(toolbar, &MusicToolBar::nextBtnClicked, this, &Player::nextMedia);
     connect(toolbar, &MusicToolBar::previousBtnClicked, this, &Player::lastMedia);
     connect(toolbar, &MusicToolBar::playModeBtnClicked, this, &Player::updatePlaymode);
+    connect(qPlayer, &QMediaPlayer::mediaStatusChanged, this, &Player::sendMetaSignal);
 }
 
 Player::~Player()
@@ -29,8 +31,7 @@ Player::~Player()
 }
 
 void Player::playMedia(int index)
-{
-
+{ 
     qDebug() << "accept signal";
     qDebug() << qPlayer->mediaStatus();
     qDebug() << qPlayer->position();
@@ -128,10 +129,20 @@ void Player::updatePlaymode()
     emit updatedMode(index);
 }
 
-//void Player::updatePlaylist(QStringList songlist)
-//{
-//    playlist->
-//}
+void Player::sendMetaSignal(QMediaPlayer::MediaStatus status)
+{
+    if (QMediaPlayer::BufferedMedia == status){
+        QString title = qPlayer->metaData(QMediaMetaData::Title).toString();
+        QString singer = qPlayer->metaData(QMediaMetaData::ContributingArtist).toString();
+        QString album = qPlayer->metaData(QMediaMetaData::AlbumTitle).toString();
+        QStringList metas = qPlayer->availableMetaData();
+        QStringList strList;
+        strList<<title<<singer<<album;
+        qDebug() <<"title:"<<strList[0]<<"\tsinger:"<<strList[1]<<"\talbum:"<<strList[2];
+        qDebug() <<"metas: "<<metas;
+        emit gettedMetadata(strList);
+    }
+}
 
 void Player::setPlaylist(QString localPath, QStringList list)
 {

@@ -212,6 +212,7 @@ void MPlayer::bind()
 
     connect(player, &Player::updatedState, musictoolbar, &MusicToolBar::updateStateIcon);
     connect(player, &Player::updatedMode, musictoolbar, &MusicToolBar::updateModeIcon);
+    connect(player,&Player::gettedMetadata, nowPlayingWidget, &NowPlayingWidget::updateLabel);
 
     //model update
     connect(titlebar, &TitleBar::addMedia, playinglistwidget, &PlayListWidget::updatePlaylist);

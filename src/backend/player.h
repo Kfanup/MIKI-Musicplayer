@@ -25,17 +25,19 @@ public:
     enum playmode { ITEMONCE = 0, ITEMLOOP, SEQUENTIAL, LOOP, RANDOM };
 
 signals:
-    void positionChanged(qint64 pos);
-    void durationChanged(qint64 d);
+    void positionChanged(qint64);
+    void durationChanged(qint64);
     // False for pause,and True for play
-    void updatedState(bool state);
-    void updatedMode(qint32 index);
+    void updatedState(bool);
+    void updatedMode(qint32);
+    void gettedMetadata(QStringList);
 
 public slots:
     void playOrPause();
     void lastMedia();
     void nextMedia();
     void updatePlaymode();
+    void sendMetaSignal(QMediaPlayer::MediaStatus status);
 //    void updatePlaylist(QStringList songlist);
 
 private:

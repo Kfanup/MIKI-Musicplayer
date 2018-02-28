@@ -8,8 +8,12 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
     setMinimumSize(450, 500);
     setStyleSheet("color:black");
 
+    QString label1 = "";
+    QString label2 = "Music For MIKI";
+    QString label3 = "";
+
     QString strHeightText = "<p style=\"line-height:%1%\">%2<p>";
-    songName = strHeightText.arg(300).arg(songName);
+    label1 = strHeightText.arg(300).arg(label1);
     nowPlayingLabel = new QLabel(tr("正在播放"),this);
     nowPlayingLabel->setAlignment(Qt::AlignLeft);
     nowPlayingLabel->setStyleSheet("font-size: 16px");
@@ -22,17 +26,17 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
 
     nameLable = new QLabel(this);
     nameLable->setAlignment(Qt::AlignLeft);
-    nameLable->setText(songName);
+    nameLable->setText(label1);
     nameLable->setFont(mfont1);
 
     singerLable = new QLabel(this);
     singerLable->setAlignment(Qt::AlignLeft);
-    singerLable->setText(singer);
+    singerLable->setText(label2);
     singerLable->setFont(mfont2);
 
     detailsLable = new QLabel(this);
     detailsLable->setAlignment(Qt::AlignLeft);
-    detailsLable->setText(more);
+    detailsLable->setText(label3);
     detailsLable->setFont(mfont2);
 
     playout = new QVBoxLayout(this);
@@ -49,6 +53,13 @@ NowPlayingWidget::NowPlayingWidget(QWidget *parent)
 
     nowPlayingLabel->installEventFilter(this);
     playListLabel->installEventFilter(this);
+}
+
+void NowPlayingWidget::updateLabel(QStringList strList)
+{
+    nameLable->setText(strList[0]);
+    singerLable->setText(QString("歌手:\t") + strList[1]);
+    detailsLable->setText(QString("专辑:\t") + strList[2]);
 }
 
 /***
