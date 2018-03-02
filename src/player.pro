@@ -7,7 +7,7 @@ include($$PWD/widgets/widgets.pri)
 include($$PWD/backend/backend.pri)
 include($$PWD/util/util.pri)
 
-QT       += core gui multimedia sql
+QT       += core gui multimedia sql network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

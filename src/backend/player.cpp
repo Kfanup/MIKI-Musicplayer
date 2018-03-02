@@ -2,12 +2,11 @@
 #include <QMediaMetaData>
 
 using namespace MMusic;
-Player::Player(QString &localPath, QStringList &pathList, QObject *parent)
+Player::Player(QString &localPath, QStringList &pathList, qint32 volume, QObject *parent)
     : QObject(parent)
 {
     playlist = new QMediaPlaylist;
     qPlayer = new QMediaPlayer;
-    toolbar = new MusicToolBar;
     database = new MusicDatabase;
     timer = new QTimer;
     this->localPlaylist = localPath;
@@ -15,11 +14,8 @@ Player::Player(QString &localPath, QStringList &pathList, QObject *parent)
     initPlaymode();
     setPlaylist(localPath,pathList);
     qPlayer->setPlaylist(playlist);
+    qPlayer->setVolume(volume);
 
-    connect(toolbar, &MusicToolBar::pauseBtnClicked, this, &Player::playOrPause);
-    connect(toolbar, &MusicToolBar::nextBtnClicked, this, &Player::nextMedia);
-    connect(toolbar, &MusicToolBar::previousBtnClicked, this, &Player::lastMedia);
-    connect(toolbar, &MusicToolBar::playModeBtnClicked, this, &Player::updatePlaymode);
     connect(qPlayer, &QMediaPlayer::mediaStatusChanged, this, &Player::sendMetaSignal);
 }
 
@@ -142,6 +138,18 @@ void Player::sendMetaSignal(QMediaPlayer::MediaStatus status)
         qDebug() <<"metas: "<<metas;
         emit gettedMetadata(strList);
     }
+}
+
+void Player::updateMediaPosition(int pos)
+{
+    qPlayer->pause();
+    qPlayer->setPosition(pos);
+    qPlayer->play();
+}
+
+void Player::updateVolume(int value)
+{
+    qPlayer->setVolume(value);
 }
 
 void Player::setPlaylist(QString localPath, QStringList list)

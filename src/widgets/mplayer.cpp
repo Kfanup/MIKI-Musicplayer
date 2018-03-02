@@ -25,7 +25,8 @@ MPlayer::MPlayer(QWidget *parent)
 
     QString localPlaylist = getPlaylistFromLocal();
     QStringList pathList= playinglistwidget->getPlaylistFromDB();
-    player = new Player(localPlaylist, pathList, this);
+    qint32 volume = database->getVolumeFromSetup();
+    player = new Player(localPlaylist, pathList, volume, this);
 
     bind();
 }
@@ -33,6 +34,19 @@ MPlayer::MPlayer(QWidget *parent)
 MPlayer::~MPlayer()
 {
     delete musicmeta;
+    delete nowPlayingWidget;
+    delete playinglistwidget;
+    delete musicStacked;
+    delete database;
+    delete musicsliderwidget;
+    delete musictoolbar;
+    delete titlebar;
+    delete musicfilemanager;
+    delete musiclibrary;
+    delete tophblayout;
+    delete btmvblayout;
+    delete toolhblayout;
+    delete mainvblayout;
 }
 
 /***
@@ -62,6 +76,7 @@ void MPlayer::setInitWidget()
     nowPlayingWidget = new NowPlayingWidget;
     playinglistwidget = new PlayListWidget;
     musicStacked = new QStackedWidget;
+    database = new MusicDatabase;
 
     musicStacked->addWidget(nowPlayingWidget);
     musicStacked->addWidget(playinglistwidget);
@@ -81,7 +96,7 @@ void MPlayer::setInitWidget()
     btmvblayout->setMargin(0);
 
     //播放控件
-    musictoolbar = new MusicToolBar;
+    musictoolbar = new MusicToolBar(database->getVolumeFromSetup());
 
     toolhblayout = new QHBoxLayout;
     toolhblayout->setAlignment(Qt::AlignCenter);
@@ -128,6 +143,11 @@ QString MPlayer::getPlaylistFromLocal()
     return cachePath;
 }
 
+void MPlayer::updateVolumeOnDatabase(int value)
+{
+    database->updateVolume(value);
+}
+
 inline void MPlayer::onAddSongClicked()
 {
     QStringList songList = musicfilemanager->addMedia();
@@ -159,30 +179,10 @@ inline void MPlayer::onAddSongDirClicked()
     emit toUpdatePlaylist(list);
 }
 
-void MPlayer::onPlayModeBtnClicked()
-{
-}
-
-void MPlayer::onPreviousBtnClicked()
-{
-}
-
-void MPlayer::onPausetnClicked()
-{
-}
-
-void MPlayer::onNextBtnClicked()
-{
-}
-
 void MPlayer::bind()
 {
     connect(titlebar, &TitleBar::addMedia, this, &MPlayer::onAddSongClicked);
     connect(titlebar, &TitleBar::addMediaDir, this, &MPlayer::onAddSongDirClicked);
-    connect(musictoolbar, &MusicToolBar::playModeBtnClicked, this, &MPlayer::onPlayModeBtnClicked);
-    connect(musictoolbar, &MusicToolBar::previousBtnClicked, this, &MPlayer::onPreviousBtnClicked);
-    connect(musictoolbar, &MusicToolBar::pauseBtnClicked, this, &MPlayer::onPausetnClicked);
-    connect(musictoolbar, &MusicToolBar::nextBtnClicked, this, &MPlayer::onNextBtnClicked);
 
     connect(nowPlayingWidget, &NowPlayingWidget::nowPlayingClicked, this,
             &MPlayer::onNowPlayingClicked);
@@ -193,7 +193,6 @@ void MPlayer::bind()
     connect(playinglistwidget, &PlayListWidget::playingListClicked, this,
             &MPlayer::onPlayingListClicked);
 
-    //    connect(playinglistwidget, &PlayListWidget::gettedSongList, player, &Player::setPlayList);
     connect(playinglistwidget, &PlayListWidget::gettedPlayIndex, player, &Player::playMedia);
 
     //播放进度条以及时间显示
@@ -203,21 +202,24 @@ void MPlayer::bind()
             &MusicSliderWidget::updatePosition);
     connect(player, &Player::positionChanged, musicsliderwidget,
             &MusicSliderWidget::updateTimeLabel);
+    connect(musicsliderwidget,&MusicSliderWidget::positionChanged, player, &Player::updateMediaPosition);
 
     //工具栏信号
     connect(musictoolbar, &MusicToolBar::pauseBtnClicked, player, &Player::playOrPause);
     connect(musictoolbar, &MusicToolBar::nextBtnClicked, player, &Player::nextMedia);
     connect(musictoolbar, &MusicToolBar::previousBtnClicked, player, &Player::lastMedia);
     connect(musictoolbar, &MusicToolBar::playModeBtnClicked, player, &Player::updatePlaymode);
+    connect(musictoolbar, &MusicToolBar::volumeChanged, player, &Player::updateVolume);
+    connect(musictoolbar, &MusicToolBar::volumeChanged, this, &MPlayer::updateVolumeOnDatabase);
 
     connect(player, &Player::updatedState, musictoolbar, &MusicToolBar::updateStateIcon);
     connect(player, &Player::updatedMode, musictoolbar, &MusicToolBar::updateModeIcon);
     connect(player,&Player::gettedMetadata, nowPlayingWidget, &NowPlayingWidget::updateLabel);
 
-    //model update
+    //更新model
     connect(titlebar, &TitleBar::addMedia, playinglistwidget, &PlayListWidget::updatePlaylist);
     connect(titlebar, &TitleBar::addMediaDir, playinglistwidget, &PlayListWidget::updatePlaylist);
 
-    //update playlist(import music)
+    //更新歌曲列表
     connect(this, &MPlayer::toUpdatePlaylist, player, &Player::updatePlaylist);
 }

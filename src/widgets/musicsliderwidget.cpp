@@ -32,6 +32,8 @@ MusicSliderWidget::MusicSliderWidget(QWidget *parent)
     musiclayout->addStretch(10);
 
     setLayout(musiclayout);
+    connect(musicSlider, &QSlider::sliderReleased, this, &MusicSliderWidget::getNewPosition);
+//    connect(musicSlider, &QSlider::valueChanged, this, &MusicSliderWidget::updatePosition);
 }
 
 void MusicSliderWidget::updatePosition(const qint64 pos)
@@ -53,4 +55,10 @@ void MusicSliderWidget::setPosition(const qint64 pos)
 void MusicSliderWidget::setTimeLabel(const qint64 time)
 {
     allTimeLabel->setText(length2String(time));
+}
+
+void MusicSliderWidget::getNewPosition()
+{
+    int pos = musicSlider->value();
+    emit positionChanged(pos);
 }

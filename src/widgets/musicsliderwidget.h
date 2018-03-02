@@ -14,9 +14,13 @@ public:
     void updatePosition(const qint64 pos);
     void updateTimeLabel(const qint64 time);
 
+signals:
+    void positionChanged(int);
+
 public slots:
     void setPosition(const qint64 pos);
     void setTimeLabel(const qint64 time);
+    void getNewPosition();
 
 private:
     QSlider *musicSlider;

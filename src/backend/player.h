@@ -16,7 +16,7 @@ class Player : public QObject
 {
     Q_OBJECT
 public:
-    Player(QString &localPath, QStringList &pathList, QObject *parent = 0);
+    Player(QString &localPath, QStringList &pathList, qint32 volume, QObject *parent = 0);
     ~Player();
     void setPlaylist(QString localPath, QStringList list);
     void updatePlaylist(QStringList list);
@@ -38,6 +38,8 @@ public slots:
     void nextMedia();
     void updatePlaymode();
     void sendMetaSignal(QMediaPlayer::MediaStatus status);
+    void updateMediaPosition(int pos);
+    void updateVolume(int value);
 //    void updatePlaylist(QStringList songlist);
 
 private:

@@ -10,9 +10,9 @@ class MusicToolBar : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MusicToolBar(QWidget *parent = 0);
+    explicit MusicToolBar(qint32 volume, QWidget *parent = 0);
     ~MusicToolBar();
-    static QSlider *volumeSlider;
+
     void onPlayModeBtnClicked();
     void onPreviousBtnClicked();
     void onPauseBtnClicked();
@@ -23,16 +23,19 @@ public:
 public slots:
     void updateModeIcon(qint32 index);
     void updateStateIcon(bool state);
+    void updateVolumeValue(int value);
 
 signals:
     void playModeBtnClicked();
     void previousBtnClicked();
     void pauseBtnClicked();
     void nextBtnClicked();
+    void volumeChanged(int);
 
 private:
-    QToolButton *playModeBtn;
-    QToolButton *previousBtn;
-    QToolButton *pauseBtn;
-    QToolButton *nextBtn;
+    QToolButton *playModeBtn = NULL;
+    QToolButton *previousBtn = NULL;
+    QToolButton *pauseBtn = NULL;
+    QToolButton *nextBtn = NULL;
+    QSlider *volumeSlider = NULL;
 };

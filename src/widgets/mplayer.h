@@ -33,13 +33,11 @@ public:
     void setInitWidget();
     void onAddSongClicked();
     void onAddSongDirClicked();
-    void onPlayModeBtnClicked();
-    void onPreviousBtnClicked();
-    void onPausetnClicked();
-    void onNextBtnClicked();
     void onNowPlayingClicked();
     void onPlayingListClicked();
     QString getPlaylistFromLocal();
+
+    void updateVolumeOnDatabase(int value);
 
 
 signals:
@@ -65,7 +63,6 @@ private:
 private:
     QMediaPlayer *myPlayer;
     QMediaPlaylist *playList;
-    QList<MusicMeta> allSongList;
 
 private:
     void bind();

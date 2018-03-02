@@ -2,7 +2,7 @@
 #include <QHBoxLayout>
 #include <QtGlobal>
 
-MusicToolBar::MusicToolBar(QWidget *parent)
+MusicToolBar::MusicToolBar(qint32 volume, QWidget *parent)
     : QWidget(parent)
 {
     setStyleSheet("color:white");
@@ -29,11 +29,11 @@ MusicToolBar::MusicToolBar(QWidget *parent)
     nextBtn->setIcon(QIcon(":/images/res/icon_unix/next.png"));
 #endif
 
-    QSlider *volumeSlider = new QSlider(Qt::Horizontal,this);
+    volumeSlider = new QSlider(Qt::Horizontal,this);
     volumeSlider->setFixedSize(100, 12);
     volumeSlider->setMaximum(100);
     volumeSlider->setMinimum(0);
-    volumeSlider->setValue(30);
+    volumeSlider->setValue(volume);
 
     QHBoxLayout *mainlayout = new QHBoxLayout(this);
     mainlayout->setAlignment(Qt::AlignCenter);
@@ -53,6 +53,8 @@ MusicToolBar::MusicToolBar(QWidget *parent)
     connect(nextBtn, &QToolButton::clicked, this, &MusicToolBar::nextBtnClicked);
     connect(previousBtn, &QToolButton::clicked, this, &MusicToolBar::previousBtnClicked);
     connect(playModeBtn, &QToolButton::clicked, this, &MusicToolBar::playModeBtnClicked);
+    connect(volumeSlider, &QSlider::valueChanged, this, &MusicToolBar::updateVolumeValue);
+    connect(volumeSlider, &QSlider::valueChanged, this, &MusicToolBar::volumeChanged);
 }
 
 MusicToolBar::~MusicToolBar()
@@ -109,4 +111,9 @@ void MusicToolBar::updateStateIcon(bool state)
         pauseBtn->setIcon(QIcon(":/images/res/icon_unix/play.png"));
     } else
         pauseBtn->setIcon(QIcon(":/images/res/icon_unix/pause.png"));
+}
+
+void MusicToolBar::updateVolumeValue(int value)
+{
+    volumeSlider->setValue(value);
 }
