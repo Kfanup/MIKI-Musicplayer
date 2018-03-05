@@ -6,6 +6,12 @@ Playlist::Playlist(const PlaylistMeta &PlaylistMeta, QObject *parent)
     this->playlistMeta = PlaylistMeta;
 }
 
+Playlist *Playlist::getInstance(const PlaylistMeta &PlaylistMeta)
+{
+    static Playlist instance(PlaylistMeta);
+    return &instance;
+}
+
 inline QString Playlist::getID() const
 {
     return playlistMeta.id;

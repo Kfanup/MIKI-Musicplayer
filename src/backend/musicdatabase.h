@@ -12,6 +12,7 @@ class MusicDatabase : public QObject, public MMusic::MSingleTon<MusicDatabase>
     Q_OBJECT
 public:
     explicit MusicDatabase(QObject *parent = nullptr);
+    static MusicDatabase* getInstance(void);
 
     void initDatabase();
     void initSetup();

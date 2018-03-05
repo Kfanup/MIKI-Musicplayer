@@ -8,7 +8,7 @@ MPlayer::MPlayer(QWidget *parent)
     setInitWidget();
 
     titlebar = new TitleBar;
-    musicfilemanager = new MusicFileManager;
+    musicfilemanager = MusicFileManager::getInstance();
 
     mainvblayout = new QVBoxLayout;
     mainvblayout->addWidget(titlebar);
@@ -20,8 +20,7 @@ MPlayer::MPlayer(QWidget *parent)
 
     setLayout(mainvblayout);
 
-    musicmeta = new MusicMeta;
-    musiclibrary = new MusicLibrary;
+    musiclibrary = MusicLibrary::getInstance();
 
     QString localPlaylist = getPlaylistFromLocal();
     QStringList pathList= playinglistwidget->getPlaylistFromDB();
@@ -33,20 +32,12 @@ MPlayer::MPlayer(QWidget *parent)
 
 MPlayer::~MPlayer()
 {
-    delete musicmeta;
     delete nowPlayingWidget;
     delete playinglistwidget;
     delete musicStacked;
-    delete database;
     delete musicsliderwidget;
     delete musictoolbar;
     delete titlebar;
-    delete musicfilemanager;
-    delete musiclibrary;
-    delete tophblayout;
-    delete btmvblayout;
-    delete toolhblayout;
-    delete mainvblayout;
 }
 
 /***
@@ -76,7 +67,7 @@ void MPlayer::setInitWidget()
     nowPlayingWidget = new NowPlayingWidget;
     playinglistwidget = new PlayListWidget;
     musicStacked = new QStackedWidget;
-    database = new MusicDatabase;
+    database = MusicDatabase::getInstance();
 
     musicStacked->addWidget(nowPlayingWidget);
     musicStacked->addWidget(playinglistwidget);
@@ -153,7 +144,7 @@ inline void MPlayer::onAddSongClicked()
     QStringList songList = musicfilemanager->addMedia();
     for (auto &song : songList) {
         QFileInfo fileinfo(song);
-        auto meta = musicmeta->fromLocalfile(fileinfo);
+        auto meta = MusicMeta::fromLocalfile(fileinfo);
 
         if (!database->isMusicMetaExist(meta.hash)) {
             qDebug() << "start to insert media";
@@ -169,7 +160,7 @@ inline void MPlayer::onAddSongDirClicked()
     QStringList list;
 
     for (auto &song : songList) {
-        auto meta = musicmeta->fromLocalfile(song);
+        auto meta = MusicMeta::fromLocalfile(song);
         list.append(song.absoluteFilePath());
         if (!database->isMusicMetaExist(meta.hash)) {
             qDebug() << "start to insert media";

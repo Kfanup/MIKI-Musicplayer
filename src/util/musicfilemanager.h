@@ -12,6 +12,7 @@ class MusicFileManager : public QWidget
     Q_OBJECT
 public:
     explicit MusicFileManager(QWidget *parent = nullptr);
+    static MusicFileManager *getInstance();
     QFileInfoList getMusicFiles(QString path);
     QString getCachePath() const ;
     //    QStringList addMusicFiles(QStringList paths);

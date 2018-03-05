@@ -5,9 +5,9 @@ using namespace MMusic;
 Player::Player(QString &localPath, QStringList &pathList, qint32 volume, QObject *parent)
     : QObject(parent)
 {
-    playlist = new QMediaPlaylist;
+    playlist = new QMediaPlaylist(this);
     qPlayer = new QMediaPlayer;
-    database = new MusicDatabase;
+    database = MusicDatabase::getInstance();
     timer = new QTimer;
     this->localPlaylist = localPath;
 
@@ -17,6 +17,12 @@ Player::Player(QString &localPath, QStringList &pathList, qint32 volume, QObject
     qPlayer->setVolume(volume);
 
     connect(qPlayer, &QMediaPlayer::mediaStatusChanged, this, &Player::sendMetaSignal);
+}
+
+Player *Player::getInstance(QString &localPath, QStringList &pathList, qint32 volume)
+{
+    static Player instance(localPath, pathList, volume);
+    return &instance;
 }
 
 Player::~Player()

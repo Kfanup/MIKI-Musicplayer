@@ -17,6 +17,7 @@ class Player : public QObject
     Q_OBJECT
 public:
     Player(QString &localPath, QStringList &pathList, qint32 volume, QObject *parent = 0);
+    static Player *getInstance(QString &localPath, QStringList &pathList, qint32 volume);
     ~Player();
     void setPlaylist(QString localPath, QStringList list);
     void updatePlaylist(QStringList list);

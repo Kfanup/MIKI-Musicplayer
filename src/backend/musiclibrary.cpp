@@ -58,6 +58,12 @@ MusicLibrary::MusicLibrary(QObject *parent)
 {
 }
 
+MusicLibrary *MusicLibrary::getInstance()
+{
+    static MusicLibrary instance;
+    return &instance;
+}
+
 MusicLibrary::~MusicLibrary()
 {
 }

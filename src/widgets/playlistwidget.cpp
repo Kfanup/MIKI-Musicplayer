@@ -12,7 +12,7 @@ PlayListWidget::PlayListWidget(QWidget *parent)
 {
     model = new Mysqlquerymodel;
     model->refresh();
-    filemanager = new MusicFileManager(this);
+    filemanager = MusicFileManager::getInstance();
 
     QTableView *view = new QTableView(this);
     view->setModel(model);
@@ -61,8 +61,6 @@ PlayListWidget::PlayListWidget(QWidget *parent)
 PlayListWidget::~PlayListWidget()
 {
     delete model;
-    delete nowPlayingLabel;
-    delete playListLabel;
 }
 
 /***
@@ -94,7 +92,7 @@ bool PlayListWidget::eventFilter(QObject *obj, QEvent *ev)
 
 QStringList PlayListWidget::getPlaylistFromDB()
 {
-    MusicDatabase *database = new MusicDatabase;
+    MusicDatabase *database = MusicDatabase::getInstance();
     QList<MusicMeta> songs;
     songs = database->getAllMeta();
     QStringList songList;
@@ -106,7 +104,6 @@ QStringList PlayListWidget::getPlaylistFromDB()
         ++index;
     }
     qDebug() << "songList" << songList;
-    database->deleteLater();
     return songList;
 }
 

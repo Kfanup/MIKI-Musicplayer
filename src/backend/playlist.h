@@ -10,6 +10,7 @@ class Playlist : public QObject
     Q_OBJECT
 public:
     explicit Playlist(const PlaylistMeta &PlaylistMeta, QObject *parent = nullptr);
+    static Playlist *getInstance(const PlaylistMeta &PlaylistMeta);
 
     enum SortType {
         SortByTitle = 0,

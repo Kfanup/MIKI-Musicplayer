@@ -1,1 +1,21 @@
-simple music-player both for Linux and Windows user
+#MIKI MusicPlayer
+
+MIKI MusicPlayer is a concise music player, which can run on both Linux and Windows
+
+##Functions
+
+* Convenient import and export functions
+* Local playlist
+* Local memory function
+* UI themes(developing)
+* More cool functions...
+
+
+##Dependencies
+* **FFmpeg**
+* **Qt** version >= 5.7
+
+
+##Licensing
+The library is distributed under LGPLv2.1 license.
+

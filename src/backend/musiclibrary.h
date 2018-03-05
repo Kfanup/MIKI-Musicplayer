@@ -12,6 +12,7 @@ class MusicLibrary : public QObject, public MMusic::MSingleTon<MusicLibrary>
     Q_OBJECT
 public:
     explicit MusicLibrary(QObject *parent = nullptr);
+    static MusicLibrary *getInstance(void);
     ~MusicLibrary();
 
     MetaPtr getMeta(const QString &hash);

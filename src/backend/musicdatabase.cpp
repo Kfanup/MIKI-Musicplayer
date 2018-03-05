@@ -42,6 +42,12 @@ MusicDatabase::MusicDatabase(QObject *parent)
 {
 }
 
+MusicDatabase *MusicDatabase::getInstance()
+{
+    static MusicDatabase instance;
+    return &instance;
+}
+
 void MusicDatabase::initDatabase()
 {
     createConnection();

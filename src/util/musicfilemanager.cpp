@@ -6,6 +6,12 @@ MusicFileManager::MusicFileManager(QWidget *parent)
 {
 }
 
+MusicFileManager *MusicFileManager::getInstance()
+{
+    static MusicFileManager instance;
+    return &instance;
+}
+
 QFileInfoList MusicFileManager::getMusicFiles(QString path)
 {
     QDir dir(path);
